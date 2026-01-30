@@ -28,17 +28,36 @@ a{color:#C8102E;font-weight:600;text-decoration:none}
 <meta name="apple-mobile-web-app-title" content="BFS Safety Stand-Down">
 
 </head>
-  <script>
+<script>
 function generatePDF() {
   const element = document.getElementById("pdfContent");
 
-  const options = {
-    margin: 0.5,
-    filename: 'BFS_Safety_Stand_Down.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
+  // Force visibility (Safari fix)
+  element.style.display = "block";
+
+  setTimeout(() => {
+    const options = {
+      margin: 0.5,
+      filename: 'BFS_Safety_Stand_Down.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      },
+      jsPDF: {
+        unit: 'in',
+        format: 'letter',
+        orientation: 'portrait'
+      }
+    };
+
+    html2pdf().from(element).set(options).save();
+  }, 500); // 👈 delay is the key
+}
+</script>
+
 
   html2pdf().set(options).from(element).save();
 }
