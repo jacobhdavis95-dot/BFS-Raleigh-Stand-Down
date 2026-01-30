@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Builders FirstSource | Safety Stand-Down</title>
@@ -27,13 +28,28 @@ a{color:#C8102E;font-weight:600;text-decoration:none}
 <meta name="apple-mobile-web-app-title" content="BFS Safety Stand-Down">
 
 </head>
+  <script>
+function generatePDF() {
+  const element = document.getElementById("pdfContent");
+
+  const options = {
+    margin: 0.5,
+    filename: 'BFS_Safety_Stand_Down.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  html2pdf().set(options).from(element).save();
+}
+</script>
 <body>
 <header>
   <h1>Builders FirstSource</h1>
   <div>Safety Stand-Down</div>
 </header>
 
-<div class="container">
+<div class="container" id="pdfContent">
 
   <div class="section" style="border-left:6px solid #1F2A44;">
     <label>Log Creation Date</label>
@@ -446,7 +462,7 @@ a{color:#C8102E;font-weight:600;text-decoration:none}
     <div id="photoPreview" style="margin-top:12px;"></div>
   </div>
 
-  <button onclick="alert('Submitted (demo)')">Submit Safety Log</button>
+  <button onclick="generatePDF()">Save Safety Stand-Down (PDF)</button>
   <p class="small">Builders FirstSource Internal / Partner Use</p>
 
 </div>
