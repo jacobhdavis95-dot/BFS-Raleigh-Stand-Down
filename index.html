@@ -581,4 +581,40 @@ document.getElementById('photoUpload').addEventListener('change', function(event
 </script>
 </body>
 </html>
+<script>
+  const AUTOSAVE_KEY = "bfs_safety_stand_down_autosave";
+
+  // Save form data
+  function saveForm() {
+    const data = {};
+    document.querySelectorAll("input, textarea, select").forEach(el => {
+      if (el.type === "checkbox" || el.type === "radio") {
+        data[el.name || el.id] = el.checked;
+      } else {
+        data[el.name || el.id] = el.value;
+      }
+    });
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
+  }
+
+  // Load form data
+  function loadForm() {
+    const saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY));
+    if (!saved) return;
+
+    document.querySelectorAll("input, textarea, select").forEach(el => {
+      const key = el.name || el.id;
+      if (saved[key] !== undefined) {
+        if (el.type === "checkbox" || el.type === "radio") {
+          el.checked = saved[key];
+        } else {
+          el.value = saved[key];
+        }
+      }
+    });
+  }
+
+  document.addEventListener("input", saveForm);
+  window.addEventListener("load", loadForm);
+</script>
 
