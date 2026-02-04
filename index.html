@@ -508,8 +508,9 @@ function generatePDF() {
     <div id="photoPreview" style="margin-top:12px;"></div>
   </div>
 
-  <button type="button" onclick="generatePDF()">Save Safety Stand-Down (PDF)</button>
-  <p class="small">Builders FirstSource Internal / Partner Use</p>
+  <button id="savePdfBtn" type="button">
+  Save Safety Stand Down (PDF)
+</button>
 
 </div>
 
@@ -530,6 +531,53 @@ document.getElementById('photoUpload').addEventListener('change', function(event
     reader.readAsDataURL(file);
   });
 });
+</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+  document.getElementById("savePdfBtn").addEventListener("click", async () => {
+    const { jsPDF } = window.jspdf;
+
+    const form = document.body; // captures entire page
+
+    // Temporarily hide button so it doesn't appear in PDF
+    const btn = document.getElementById("savePdfBtn");
+    btn.style.display = "none";
+
+    const canvas = await html2canvas(form, {
+      scale: 2,
+      useCORS: true
+    });
+
+    btn.style.display = "block";
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "pt", "a4");
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    let position = 0;
+
+    if (pdfHeight < pdf.internal.pageSize.getHeight()) {
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    } else {
+      let heightLeft = pdfHeight;
+      let pageHeight = pdf.internal.pageSize.getHeight();
+
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+        position -= pageHeight;
+
+        if (heightLeft > 0) {
+          pdf.addPage();
+        }
+      }
+    }
+
+    pdf.save("BFS_Safety_Stand_Down.pdf");
+  });
 </script>
 </body>
 </html>
