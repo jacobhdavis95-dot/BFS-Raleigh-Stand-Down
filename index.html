@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>BFS | Safety Stand-Down</title>
-
+  
 <style>
 body{
   font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
@@ -340,40 +340,85 @@ canvas{
     <li>An incident report must be submitted within 24 hours.</li>
 
   
-<!-- SIGNATURE -->
+<!-- ATTENDEE INITIALS -->
 <div class="section">
-  <div class="section-title">Supervisor Signature</div>
-  <canvas id="signaturePad" width="800" height="200"></canvas>
-  <button type="button" onclick="clearSignature()">Clear Signature</button>
+  <div class="section-title">Stand-Down Attendee Initials</div>
+  <p>Please have all attendees initial below (up to 10 participants).</p>
+
+  <div class="grid">
+    <input type="text" placeholder="Initials 1">
+    <input type="text" placeholder="Initials 2">
+    <input type="text" placeholder="Initials 3">
+    <input type="text" placeholder="Initials 4">
+    <input type="text" placeholder="Initials 5">
+    <input type="text" placeholder="Initials 6">
+    <input type="text" placeholder="Initials 7">
+    <input type="text" placeholder="Initials 8">
+    <input type="text" placeholder="Initials 9">
+    <input type="text" placeholder="Initials 10">
+  </div>
 </div>
 
-<button id="savePdfBtn">Save Safety Stand Down (PDF)</button>
-
+<!-- BFS REPRESENTATIVE SIGNATURE -->
+<div class="section">
+  <div class="section-title">BFS Representative Signature</div>
+  <canvas id="bfsSignaturePad" width="800" height="200"></canvas>
+  <button type="button" onclick="clearBFSSignature()">Clear Signature</button>
 </div>
 
+<!-- SUBCONTRACTOR REPRESENTATIVE SIGNATURE -->
+<div class="section">
+  <div class="section-title">Subcontractor Representative Signature</div>
+  <canvas id="subSignaturePad" width="800" height="200"></canvas>
+  <button type="button" onclick="clearSubSignature()">Clear Signature</button>
+</div>
+
+</script>
 <script>
-const canvas = document.getElementById("signaturePad");
-const ctx = canvas.getContext("2d");
-let drawing=false;
+// BFS Signature Pad
+const bfsCanvas = document.getElementById("bfsSignaturePad");
+const bfsCtx = bfsCanvas.getContext("2d");
+let bfsDrawing = false;
 
-canvas.addEventListener("mousedown",()=>drawing=true);
-canvas.addEventListener("mouseup",()=>drawing=false);
-canvas.addEventListener("mousemove",draw);
+bfsCanvas.addEventListener("mousedown",()=>bfsDrawing=true);
+bfsCanvas.addEventListener("mouseup",()=>bfsDrawing=false);
+bfsCanvas.addEventListener("mousemove",(e)=>{
+  if(!bfsDrawing) return;
+  const rect=bfsCanvas.getBoundingClientRect();
+  bfsCtx.lineWidth=2;
+  bfsCtx.lineCap="round";
+  bfsCtx.strokeStyle="#000";
+  bfsCtx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+  bfsCtx.stroke();
+  bfsCtx.beginPath();
+  bfsCtx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+});
 
-function draw(e){
-  if(!drawing) return;
-  const rect=canvas.getBoundingClientRect();
-  ctx.lineWidth=2;
-  ctx.lineCap="round";
-  ctx.strokeStyle="#000";
-  ctx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+function clearBFSSignature(){
+  bfsCtx.clearRect(0,0,bfsCanvas.width,bfsCanvas.height);
 }
 
-function clearSignature(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+// Subcontractor Signature Pad
+const subCanvas = document.getElementById("subSignaturePad");
+const subCtx = subCanvas.getContext("2d");
+let subDrawing = false;
+
+subCanvas.addEventListener("mousedown",()=>subDrawing=true);
+subCanvas.addEventListener("mouseup",()=>subDrawing=false);
+subCanvas.addEventListener("mousemove",(e)=>{
+  if(!subDrawing) return;
+  const rect=subCanvas.getBoundingClientRect();
+  subCtx.lineWidth=2;
+  subCtx.lineCap="round";
+  subCtx.strokeStyle="#000";
+  subCtx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+  subCtx.stroke();
+  subCtx.beginPath();
+  subCtx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+});
+
+function clearSubSignature(){
+  subCtx.clearRect(0,0,subCanvas.width,subCanvas.height);
 }
 </script>
 
