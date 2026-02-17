@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>BFS | Safety Stand-Down</title>
-
+  
 <style>
 body{
   font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
@@ -69,40 +69,23 @@ input, select, textarea{
   border-radius:6px;
   border:1px solid #ccc;
 }
-ul{ margin-top:8px; }
+ul{
+  margin-top:8px;
+}
 button{
   width:100%;
-  padding:10px;
+  padding:14px;
   background:#C8102E;
   color:#fff;
   font-weight:700;
   border:none;
   border-radius:8px;
-  margin-top:10px;
-  cursor:pointer;
+  margin-top:20px;
 }
-
-/* Initial pads */
-.initial-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-  margin-top:10px;
-}
-.initialPad{
-  width:100%;
-  height:80px;
-  border:2px solid #C8102E;
-  border-radius:6px;
-  background:#fff;
-}
-
-/* Signature pads */
-canvas.signature{
-  width:100%;
-  height:200px;
+canvas{
   border:2px solid #C8102E;
   border-radius:8px;
+  margin-top:10px;
 }
 </style>
 </head>
@@ -117,20 +100,39 @@ canvas.signature{
 <div class="drive">DRIVE TO ZERO</div>
 <div class="raleigh">RALEIGH INSTALL SERVICES</div>
 
-<div class="container">
+<div class="container" id="pdfContent">
 
 <!-- PROJECT INFO -->
 <div class="section">
   <div class="section-title">Project Information</div>
   <div class="grid">
-    <div><label>Date</label><input type="date"></div>
-    <div><label>BFS Representative</label><input type="text"></div>
-    <div><label>Customer</label><input type="text"></div>
-    <div><label>Building</label><input type="text"></div>
-    <div><label>Project / Jobsite</label><input type="text"></div>
+
+    <div>
+      <label>Date</label>
+      <input type="date">
+    </div>
+    <div>
+      <label>BFS Representative</label>
+      <input type="text">
+    </div>
+
+    <div>
+      <label>Customer</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Building</label>
+      <input type="text">
+    </div>
+
+    <div>
+      <label>Project / Jobsite</label>
+      <input type="text" id="jobsite">
+    </div>
     <div>
       <label>Project Type</label>
       <select>
+        <option value="">Select Type</option>
         <option>Framing</option>
         <option>Windows / Doors</option>
         <option>Trim</option>
@@ -138,143 +140,438 @@ canvas.signature{
         <option>Other</option>
       </select>
     </div>
-    <div><label>Lot</label><input type="text"></div>
-    <div><label># Workers Onsite</label><input type="number"></div>
-    <div><label>Project Subcontractor</label><input type="text"></div>
-    <div><label>Onsite Supervisor (Subcontractor)</label><input type="text"></div>
+
+    <div>
+      <label>Lot</label>
+      <input type="text">
+    </div>
+    <div>
+      <label># Workers Onsite</label>
+      <input type="number">
+    </div>
+
+    <div>
+      <label>Project Subcontractor</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Onsite Supervisor (Subcontractor)</label>
+      <input type="text">
+    </div>
+
   </div>
 </div>
 
-<!-- DETAILED SUMMARY -->
+<!-- DETAILED SAFETY SUMMARY -->
 <div class="section">
   <div class="section-title">Detailed Safety Summary</div>
+
   <label>Safety Topics Discussed</label>
   <textarea rows="4"></textarea>
-  <label>Corrective Actions Needed</label>
+
+  <label style="margin-top:15px;">Corrective Actions Needed</label>
   <textarea rows="4"></textarea>
 </div>
 
-<!-- ATTENDEE INITIALS -->
+<!-- SAFETY VIOLATION BREAKDOWN -->
+<div class="section">
+  <div class="section-title">Safety Violation Breakdown</div>
+  <ul>
+    <li><strong>Hardhat – Glasses – Boots:</strong> $50–$100 per person</li>
+    <li><strong>Ladder Violation:</strong> $100–$250 per person</li>
+    <li><strong>Safety Rails:</strong> $100–$250 per person</li>
+    <li><strong>Crane Safety Violation:</strong> $100–$500 per offense</li>
+    <li><strong>Drugs or Alcohol:</strong> $500 – Termination</li>
+  </ul>
+</div>
+
+<!-- SCAFFOLDING POLICY -->
+<div class="section">
+  <div class="section-title">Scaffolding Policy</div>
+
+  <ul>
+    <li>Site-built scaffolding is NOT allowed on BFS jobsites.</li>
+    <li>Only steel, site-assembled scaffolding is permitted.</li>
+  </ul>
+
+  <h4 style="margin-top:15px;">Not Allowed</h4>
+  <ul>
+    <li>Wood-framed or jobsite-built scaffold systems</li>
+    <li>Improvised platform setups</li>
+  </ul>
+
+  <h4 style="margin-top:15px;">Allowed</h4>
+  <ul>
+    <li>Steel baker-style scaffold systems</li>
+    <li>Manufacturer-assembled rolling scaffolds</li>
+  </ul>
+
+  <p style="margin-top:20px; font-weight:600; text-align:center;">
+    Outperform Today. Transform Tomorrow.
+  </p>
+</div>
+
+<!-- SEVERE WEATHER -->
+<div class="section">
+  <div class="section-title">Severe Weather</div>
+  <p>
+  Framing crews must properly brace wall panels and trusses.
+  Installation during severe weather is discouraged.
+  If materials fall or are damaged, this is considered an automatic rebuild.
+  </p>
+</div>
+
+<!-- COLD WEATHER -->
+<div class="section">
+  <div class="section-title">Cold Weather</div>
+  <p>Propane heaters and burn piles are prohibited.</p>
+</div>
+
+<!-- MATERIAL HANDLING -->
+<div class="section">
+  <div class="section-title">Material Handling</div>
+  <ul>
+    <li>Do NOT move material without BFS approval.</li>
+    <li>Unauthorized transfer may be treated as theft.</li>
+    <li>Do not install damaged material.</li>
+  </ul>
+</div>
+
+<!-- WORKING HOURS -->
+<div class="section">
+  <div class="section-title">Working Hours</div>
+  <ul>
+    <li>No framing before 7:00 AM or after 7:00 PM (Mon–Fri)</li>
+    <li>No framing before 9:00 AM Saturday</li>
+    <li><strong>No work Sundays</strong></li>
+  </ul>
+</div>
+
+<!-- FOUNDATIONS SUMMARY -->
+<div class="section">
+  <div class="section-title">Foundations</div>
+
+  <p>
+    If you have any issues with the concrete slabs or foundations, you must immediately:
+  </p>
+
+  <ol>
+    <li>Notify the builder or your project manager.</li>
+    <li>Document the issue — ideally with written notification including a photo.</li>
+    <li>
+      Determine a solution: adjust stud heights, have the mason correct the foundation,
+      or stop work until an approved solution is agreed upon.
+    </li>
+  </ol>
+
+  <p style="margin-top:15px;">
+    <strong>
+    The framer will be paid for framing adjustments required due to concrete or foundation
+    issues if the project manager is notified before continuing framing.
+    </strong>
+  </p>
+
+  <p style="margin-top:10px;">
+    <strong>
+    If a framer continues progress without notifying the project manager,
+    the framer will be responsible for all costs to repair framing inconsistencies
+    caused by foundation errors.
+    </strong>
+  </p>
+
+  <p style="margin-top:20px; font-weight:600; text-align:center;">
+    Outperform Today. Transform Tomorrow.
+  </p>
+</div>
+
+  <!-- SUBCONTRACTOR SAFETY REQUIREMENTS -->
+<div class="section">
+  <div class="section-title">Subcontractor Safety Requirements</div>
+
+  <p>
+    The Subcontractor is required to perform all work under the Master Agreement
+    in accordance with the Builders FirstSource Safety Management Program.
+  </p>
+
+  <h4 style="margin-top:20px;">A. General</h4>
+  <ul>
+    <li>Builders FirstSource is committed to promoting a safe work environment for employees, customers, subcontractor employees, representatives, and visitors.</li>
+    <li>The term “employee” includes subcontractors, suppliers, and all personnel present at a Builders FirstSource project site.</li>
+    <li>Safety and health of every individual on a BFS jobsite is critical.</li>
+    <li>All individuals are responsible for observing safe work practices and avoiding at-risk behavior.</li>
+    <li>Compliance with all BFS safety policies and procedures is mandatory.</li>
+    <li>The Subcontractor is 100% responsible for the safety of its employees and suppliers.</li>
+  </ul>
+
+  <h4 style="margin-top:20px;">B. Roles & Responsibilities</h4>
+  <ul>
+    <li>Subcontractors must designate a “Competent Person” as required by OSHA.</li>
+    <li>The Competent Person must have authority to take corrective action.</li>
+    <li>All subcontractor employees are responsible for their own safety compliance.</li>
+    <li>Unsafe conditions must be corrected immediately.</li>
+  </ul>
+
+  <h4 style="margin-top:20px;">C. Written Safety Plans</h4>
+  <ul>
+    <li>Subcontractors must maintain a written Safety & Health Plan or IIPP when required.</li>
+    <li>Plans must include hazard identification and mitigation procedures.</li>
+    <li>Fall Protection Plans are required for work at heights of 6 feet or more.</li>
+    <li>Emergency response procedures must be documented.</li>
+  </ul>
+
+  <h4 style="margin-top:20px;">D. Training</h4>
+  <ul>
+    <li>The subcontractor is responsible for providing all required safety training.</li>
+    <li>Employees must be trained on equipment, fall protection, PPE, and hazard recognition.</li>
+    <li>BFS may require additional or specialized training as a condition of work.</li>
+  </ul>
+
+  <h4 style="margin-top:20px;">E. Compliance & Enforcement</h4>
+  <ul>
+    <li>Failure to comply may result in removal from the project.</li>
+    <li>Violations may lead to probation, suspension, or termination of contract.</li>
+    <li>OSHA citations involving subcontractors are the subcontractor’s responsibility.</li>
+  </ul>
+
+  <h4 style="margin-top:20px;">F. Incident Reporting Procedures</h4>
+  <ul>
+    <li>Injured employees must receive medical attention immediately when required.</li>
+    <li>BFS Management must be notified immediately by phone.</li>
+    <li>An incident report must be submitted within 24 hours.</li>
+
+<!-- ATTENDEE SIGNED INITIALS -->
 <div class="section">
   <div class="section-title">Stand-Down Attendee Signed Initials</div>
+  <p>Please have each attendee initial below (up to 10 participants).</p>
+
   <div class="initial-grid">
-    <!-- 10 signature pads -->
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
+    <!-- 10 Pads -->
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(0)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(1)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(2)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(3)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(4)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(5)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(6)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(7)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(8)">Clear</button></div>
+    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(9)">Clear</button></div>
   </div>
 </div>
 
-<!-- BFS SIGNATURE -->
+
+<!-- BFS REPRESENTATIVE SIGNATURE -->
 <div class="section">
   <div class="section-title">BFS Representative Signature</div>
-  <canvas id="bfsSignature" class="signature"></canvas>
-  <button onclick="clearCanvas('bfsSignature')">Clear Signature</button>
+  <canvas id="bfsSignaturePad" width="800" height="200"></canvas>
+  <button type="button" onclick="clearBFSSignature()">Clear Signature</button>
 </div>
 
-<!-- SUBCONTRACTOR SIGNATURE -->
+<!-- SUBCONTRACTOR REPRESENTATIVE SIGNATURE -->
 <div class="section">
   <div class="section-title">Subcontractor Representative Signature</div>
-  <canvas id="subSignature" class="signature"></canvas>
-  <button onclick="clearCanvas('subSignature')">Clear Signature</button>
+  <canvas id="subSignaturePad" width="800" height="200"></canvas>
+  <button type="button" onclick="clearSubSignature()">Clear Signature</button>
 </div>
 
-<!-- PHOTO SECTION -->
-<div class="section">
-  <div class="section-title">Jobsite Photos</div>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div id="photoPreview"></div>
-</div>
-
-</div>
-
+</script>
 <script>
-// Signature Drawing Logic
-function enableDrawing(canvas){
+// BFS Signature Pad
+const bfsCanvas = document.getElementById("bfsSignaturePad");
+const bfsCtx = bfsCanvas.getContext("2d");
+let bfsDrawing = false;
+
+bfsCanvas.addEventListener("mousedown",()=>bfsDrawing=true);
+bfsCanvas.addEventListener("mouseup",()=>bfsDrawing=false);
+bfsCanvas.addEventListener("mousemove",(e)=>{
+  if(!bfsDrawing) return;
+  const rect=bfsCanvas.getBoundingClientRect();
+  bfsCtx.lineWidth=2;
+  bfsCtx.lineCap="round";
+  bfsCtx.strokeStyle="#000";
+  bfsCtx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+  bfsCtx.stroke();
+  bfsCtx.beginPath();
+  bfsCtx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+});
+
+function clearBFSSignature(){
+  bfsCtx.clearRect(0,0,bfsCanvas.width,bfsCanvas.height);
+}
+
+// Subcontractor Signature Pad
+const subCanvas = document.getElementById("subSignaturePad");
+const subCtx = subCanvas.getContext("2d");
+let subDrawing = false;
+
+subCanvas.addEventListener("mousedown",()=>subDrawing=true);
+subCanvas.addEventListener("mouseup",()=>subDrawing=false);
+subCanvas.addEventListener("mousemove",(e)=>{
+  if(!subDrawing) return;
+  const rect=subCanvas.getBoundingClientRect();
+  subCtx.lineWidth=2;
+  subCtx.lineCap="round";
+  subCtx.strokeStyle="#000";
+  subCtx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+  subCtx.stroke();
+  subCtx.beginPath();
+  subCtx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+});
+
+function clearSubSignature(){
+  subCtx.clearRect(0,0,subCanvas.width,subCanvas.height);
+}
+</script>
+
+ <script>
+const initialPads = document.querySelectorAll(".initialPad");
+let drawingIndex = null;
+
+initialPads.forEach((canvas, index) => {
   const ctx = canvas.getContext("2d");
-  let drawing = false;
 
-  function resize(){
-    const ratio = window.devicePixelRatio || 1;
-    canvas.width = canvas.offsetWidth * ratio;
-    canvas.height = canvas.offsetHeight * ratio;
-    ctx.scale(ratio, ratio);
-  }
-  resize();
-  window.addEventListener("resize", resize);
+  canvas.addEventListener("mousedown", () => drawingIndex = index);
+  canvas.addEventListener("mouseup", () => drawingIndex = null);
+  canvas.addEventListener("mouseleave", () => drawingIndex = null);
 
-  canvas.addEventListener("mousedown", ()=>drawing=true);
-  canvas.addEventListener("mouseup", ()=>drawing=false);
-  canvas.addEventListener("mouseleave", ()=>drawing=false);
+  canvas.addEventListener("mousemove", (e) => {
+    if (drawingIndex !== index) return;
 
-  canvas.addEventListener("mousemove", e=>{
-    if(!drawing) return;
     const rect = canvas.getBoundingClientRect();
-    ctx.lineWidth=2;
-    ctx.lineCap="round";
-    ctx.strokeStyle="#000";
-    ctx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
   });
 
-  canvas.addEventListener("touchstart", ()=>drawing=true);
-  canvas.addEventListener("touchend", ()=>drawing=false);
-  canvas.addEventListener("touchmove", e=>{
+  // Touch support
+  canvas.addEventListener("touchstart", () => drawingIndex = index);
+  canvas.addEventListener("touchend", () => drawingIndex = null);
+  canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    if (drawingIndex !== index) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+  });
+});
+
+function clearInitial(index){
+  const canvas = initialPads[index];
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+</script>
+   <script>
+const initialPads = document.querySelectorAll(".initialPad");
+
+initialPads.forEach((canvas, index) => {
+  const ctx = canvas.getContext("2d");
+
+  // Set proper resolution
+  function resizeCanvas(){
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = 80 * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  let drawing = false;
+
+  canvas.addEventListener("mousedown", ()=> drawing = true);
+  canvas.addEventListener("mouseup", ()=> drawing = false);
+  canvas.addEventListener("mouseleave", ()=> drawing = false);
+
+  canvas.addEventListener("mousemove", (e)=>{
+    if(!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  });
+
+  // Touch Support
+  canvas.addEventListener("touchstart", ()=> drawing = true);
+  canvas.addEventListener("touchend", ()=> drawing = false);
+  canvas.addEventListener("touchmove", (e)=>{
     e.preventDefault();
     if(!drawing) return;
     const rect = canvas.getBoundingClientRect();
     const touch = e.touches[0];
-    ctx.lineWidth=2;
-    ctx.lineCap="round";
-    ctx.strokeStyle="#000";
-    ctx.lineTo(touch.clientX-rect.left,touch.clientY-rect.top);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(touch.clientX-rect.left,touch.clientY-rect.top);
+    ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
   });
-}
+});
 
-document.querySelectorAll(".initialPad").forEach(enableDrawing);
-enableDrawing(document.getElementById("bfsSignature"));
-enableDrawing(document.getElementById("subSignature"));
-
-function clearCanvas(id){
-  const canvas=document.getElementById(id);
-  const ctx=canvas.getContext("2d");
+function clearInitial(index){
+  const canvas = initialPads[index];
+  const ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
+</script>
+<!-- PHOTO UPLOAD SECTION -->
+<div class="section">
+  <div class="section-title">Jobsite Photos</div>
 
-// Photo upload with compression
+  <input type="file" id="photoUpload" accept="image/*" multiple>
+  <p style="font-size:12px;color:#666;">Upload photos from your gallery (multiple allowed)</p>
+
+  <div id="photoPreview"></div>
+</div>
+<script>
+let compressedImages = [];
+
 document.getElementById('photoUpload').addEventListener('change', function(event){
-  const preview=document.getElementById('photoPreview');
-  preview.innerHTML='';
+  const preview = document.getElementById('photoPreview');
+  preview.innerHTML = '';
+  compressedImages = [];
+
   Array.from(event.target.files).forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=function(e){
-      const img=new Image();
-      img.src=e.target.result;
-      img.onload=function(){
-        const canvas=document.createElement('canvas');
-        const ctx=canvas.getContext('2d');
-        const MAX_WIDTH=1000;
-        const scale=MAX_WIDTH/img.width;
-        canvas.width=MAX_WIDTH;
-        canvas.height=img.height*scale;
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const MAX_WIDTH = 1000;
+        const scale = MAX_WIDTH / img.width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scale;
+
         ctx.drawImage(img,0,0,canvas.width,canvas.height);
-        const compressed=canvas.toDataURL("image/jpeg",0.6);
-        const previewImg=document.createElement('img');
-        previewImg.src=compressed;
-        previewImg.style.width="100%";
-        previewImg.style.marginTop="10px";
+
+        const compressed = canvas.toDataURL("image/jpeg",0.6);
+        compressedImages.push(compressed);
+
+        const previewImg = document.createElement('img');
+        previewImg.src = compressed;
+        previewImg.style.width='100%';
+        previewImg.style.marginTop='10px';
         preview.appendChild(previewImg);
       };
     };
@@ -285,4 +582,3 @@ document.getElementById('photoUpload').addEventListener('change', function(event
 
 </body>
 </html>
-
