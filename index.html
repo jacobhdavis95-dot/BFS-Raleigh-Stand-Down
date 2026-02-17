@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Builders FirstSource | Safety Stand-Down</title>
+<title>BFS | Safety Stand-Down</title>
 
 <style>
 body{
@@ -12,58 +12,66 @@ body{
   background:#f4f6f8;
   color:#1F2A44;
 }
-
 header{
   background:#C8102E;
   color:#fff;
-  padding:18px;
+  padding:14px;
   text-align:center;
 }
-
+.drive{
+  background:#1F2A44;
+  color:#fff;
+  text-align:center;
+  padding:6px;
+  font-size:13px;
+  letter-spacing:1px;
+}
+.raleigh{
+  background:#C8102E;
+  color:#fff;
+  text-align:center;
+  padding:6px;
+  font-size:12px;
+  font-weight:600;
+}
 .container{
   max-width:900px;
   margin:auto;
   padding:20px;
 }
-
 .section{
   background:#fff;
   border:2px solid #C8102E;
   border-radius:10px;
   padding:18px;
   margin-bottom:20px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
-
 .section-title{
   font-size:18px;
   font-weight:700;
   margin-bottom:10px;
   color:#C8102E;
 }
-
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:16px;
 }
-
 label{
   font-weight:600;
-  font-size:14px;
   display:block;
   margin-top:10px;
 }
-
 input, select, textarea{
   width:100%;
   padding:10px;
   margin-top:5px;
   border-radius:6px;
   border:1px solid #ccc;
-  font-size:14px;
 }
-
+ul{
+  margin-top:8px;
+}
 button{
   width:100%;
   padding:14px;
@@ -73,20 +81,9 @@ button{
   border:none;
   border-radius:8px;
   margin-top:20px;
-  cursor:pointer;
 }
-
-button:hover{
-  background:#a50e25;
-}
-
-.small{
-  font-size:12px;
-  color:#666;
-  margin-top:8px;
-}
-
-img{
+canvas{
+  border:2px solid #C8102E;
   border-radius:8px;
   margin-top:10px;
 }
@@ -100,73 +97,92 @@ img{
   <div>Safety Stand-Down</div>
 </header>
 
+<div class="drive">DRIVE TO ZERO</div>
+<div class="raleigh">RALEIGH INSTALL SERVICES</div>
+
 <div class="container" id="pdfContent">
 
 <!-- PROJECT INFO -->
 <div class="section">
-  <div class="section-title">Project Information / Información del Proyecto</div>
+  <div class="section-title">Project Information</div>
   <div class="grid">
-    <div>
-      <label>Date / Fecha</label>
-      <input type="date">
-    </div>
-    <div>
-      <label>BFS Representative / Representante BFS</label>
-      <input>
-    </div>
-    <div>
-      <label>Customer / Cliente</label>
-      <input>
-    </div>
-    <div>
-      <label>Project / Proyecto</label>
-      <input id="jobsite">
-    </div>
-    <div>
-      <label>Lot / Lote</label>
-      <input>
-    </div>
-    <div>
-      <label># Workers / # Trabajadores</label>
-      <input type="number">
-    </div>
+    <div><label>Date</label><input type="date"></div>
+    <div><label>BFS Representative</label><input></div>
+    <div><label>Customer</label><input></div>
+    <div><label>Project / Jobsite</label><input id="jobsite"></div>
+    <div><label>Lot</label><input></div>
+    <div><label># Workers</label><input type="number"></div>
   </div>
 </div>
 
-<!-- SAFETY SUMMARY -->
+<!-- DETAILED SUMMARY -->
 <div class="section">
-  <div class="section-title">Safety Summary / Resumen de Seguridad</div>
+  <div class="section-title">Detailed Safety Summary / Resumen Detallado de Seguridad</div>
 
-  <label>PPE & Safety Procedures Followed?</label>
-  <label><em>¿Se siguieron los procedimientos de seguridad?</em></label>
-  <select>
-    <option>Yes / Sí</option>
-    <option>Partial / Parcial</option>
-    <option>No</option>
-  </select>
+  <label>Safety Topics Discussed</label>
+  <textarea rows="3"></textarea>
 
-  <label>Stand-Down Summary</label>
-  <label><em>Resumen de la Reunión</em></label>
-  <textarea rows="4"></textarea>
+  <label>Temas de Seguridad Discutidos</label>
+  <textarea rows="3"></textarea>
 
-  <label>Project Issues / Corrections</label>
-  <label><em>Problemas del Proyecto / Correcciones</em></label>
-  <textarea rows="4"></textarea>
+  <label>Corrective Actions Required</label>
+  <textarea rows="3"></textarea>
+
+  <label>Acciones Correctivas Requeridas</label>
+  <textarea rows="3"></textarea>
 </div>
 
-<!-- SAFETY VIOLATIONS -->
+<!-- SAFETY VIOLATION BREAKDOWN -->
 <div class="section">
-  <div class="section-title">Safety Violations / Violaciones</div>
-
+  <div class="section-title">Safety Violation Breakdown / Lista de Violación de Seguridad</div>
   <ul>
-    <li><strong>Hardhat – Glasses – Boots:</strong> $50–$100<br>
-    <em>Casco – Gafas – Botas: $50–$100</em></li>
+    <li><strong>Hardhat – Glasses – Boots:</strong> $50–$100 per person<br>
+    <em>Casco – Gafas – Botas:</em> $50–$100 por persona</li>
 
-    <li><strong>Ladder Violation:</strong> $100–$250<br>
-    <em>Violación de Escalera: $100–$250</em></li>
+    <li><strong>Ladder Violation:</strong> $100–$250 per person<br>
+    <em>Violación de Escalera:</em> $100–$250 por persona</li>
+
+    <li><strong>Safety Rails:</strong> $100–$250 per person<br>
+    <em>Barandillas de Seguridad:</em> $100–$250 por persona</li>
+
+    <li><strong>Crane Safety Violation:</strong> $100–$500 per offense<br>
+    <em>Violación de Seguridad de la Grúa:</em> $100–$500 por infracción</li>
 
     <li><strong>Drugs or Alcohol:</strong> $500 – Termination<br>
-    <em>Drogas o Alcohol: $500 – Terminación</em></li>
+    <em>Drogas o Alcohol:</em> $500 – Terminación</li>
+  </ul>
+</div>
+
+<!-- SEVERE WEATHER -->
+<div class="section">
+  <div class="section-title">Severe Weather / Clima Severo</div>
+  <p>
+  Framing crews must properly brace wall panels and trusses.
+  Installation during severe weather is discouraged.
+  If materials fall or are damaged, this is considered an automatic rebuild.
+  </p>
+  <p>
+  Los equipos de enmarcado deben asegurar adecuadamente los paneles y vigas.
+  No se recomienda instalar durante clima severo.
+  Si el material se cae o se daña, se considera reconstrucción automática.
+  </p>
+</div>
+
+<!-- COLD WEATHER -->
+<div class="section">
+  <div class="section-title">Cold Weather / Clima Frío</div>
+  <p>Propane heaters and burn piles are prohibited.</p>
+  <p>Está prohibido el uso de calentadores a propano y fogatas.</p>
+</div>
+
+<!-- MATERIAL HANDLING -->
+<div class="section">
+  <div class="section-title">Material Handling / Manejo de Materiales</div>
+  <ul>
+    <li>Do NOT move material without BFS approval.</li>
+    <li>No mover material sin aprobación de BFS.</li>
+    <li>Unauthorized transfer may be treated as theft.</li>
+    <li>Transferencia no autorizada puede considerarse robo.</li>
   </ul>
 </div>
 
@@ -174,113 +190,49 @@ img{
 <div class="section">
   <div class="section-title">Working Hours / Horario Laboral</div>
   <ul>
-    <li>No work before 7AM or after 7PM (Mon–Fri)</li>
-    <li>No work before 9AM Saturday</li>
-    <li><strong>No work Sunday</strong></li>
-  </ul>
-  <ul>
-    <li><em>No trabajar antes de 7AM o después de 7PM</em></li>
-    <li><em>No trabajar antes de 9AM sábado</em></li>
-    <li><strong><em>No trabajar domingo</em></strong></li>
+    <li>No framing before 7:00 AM or after 7:00 PM (Mon–Fri)</li>
+    <li>No comenzar antes de 7:00 AM ni después de 7:00 PM</li>
+    <li>No framing before 9:00 AM Saturday</li>
+    <li>No comenzar antes de 9:00 AM los sábados</li>
+    <li><strong>No work Sundays / No trabajar los domingos</strong></li>
   </ul>
 </div>
 
-<!-- SIGNATURES -->
+<!-- SIGNATURE -->
 <div class="section">
-  <div class="section-title">Stand-Down Attendees / Firmas</div>
-  <div class="grid">
-    <input placeholder="1. Name / Nombre">
-    <input placeholder="2. Name / Nombre">
-    <input placeholder="3. Name / Nombre">
-    <input placeholder="4. Name / Nombre">
-    <input placeholder="5. Name / Nombre">
-    <input placeholder="6. Name / Nombre">
-    <input placeholder="7. Name / Nombre">
-    <input placeholder="8. Name / Nombre">
-    <input placeholder="9. Name / Nombre">
-    <input placeholder="10. Name / Nombre">
-  </div>
-</div>
-
-<!-- PHOTO UPLOAD -->
-<div class="section">
-  <div class="section-title">Photos / Fotos</div>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div class="small">Upload from gallery / Subir desde galería</div>
-  <div id="photoPreview"></div>
+  <div class="section-title">Supervisor Signature / Firma del Supervisor</div>
+  <canvas id="signaturePad" width="800" height="200"></canvas>
+  <button type="button" onclick="clearSignature()">Clear Signature</button>
 </div>
 
 <button id="savePdfBtn">Save Safety Stand Down (PDF)</button>
 
 </div>
 
-<!-- PHOTO COMPRESSION -->
 <script>
-document.getElementById('photoUpload').addEventListener('change', function(event){
-  const preview = document.getElementById('photoPreview');
-  preview.innerHTML = '';
+const canvas = document.getElementById("signaturePad");
+const ctx = canvas.getContext("2d");
+let drawing=false;
 
-  Array.from(event.target.files).forEach(file=>{
-    const reader = new FileReader();
-    reader.onload = function(e){
-      const img = new Image();
-      img.src = e.target.result;
+canvas.addEventListener("mousedown",()=>drawing=true);
+canvas.addEventListener("mouseup",()=>drawing=false);
+canvas.addEventListener("mousemove",draw);
 
-      img.onload = function(){
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+function draw(e){
+  if(!drawing) return;
+  const rect=canvas.getBoundingClientRect();
+  ctx.lineWidth=2;
+  ctx.lineCap="round";
+  ctx.strokeStyle="#000";
+  ctx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
+}
 
-        const MAX_WIDTH = 1000;
-        const scale = MAX_WIDTH / img.width;
-
-        canvas.width = MAX_WIDTH;
-        canvas.height = img.height * scale;
-
-        ctx.drawImage(img,0,0,canvas.width,canvas.height);
-
-        const compressed = canvas.toDataURL("image/jpeg",0.6);
-
-        const previewImg = document.createElement('img');
-        previewImg.src = compressed;
-        previewImg.style.width='100%';
-        preview.appendChild(previewImg);
-      };
-    };
-    reader.readAsDataURL(file);
-  });
-});
-</script>
-
-<!-- PDF GENERATION -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-document.getElementById("savePdfBtn").addEventListener("click", async ()=>{
-  const { jsPDF } = window.jspdf;
-
-  const btn = document.getElementById("savePdfBtn");
-  btn.style.display="none";
-
-  const element = document.getElementById("pdfContent");
-
-  const canvas = await html2canvas(element,{
-    scale:0.9,
-    useCORS:true
-  });
-
-  btn.style.display="block";
-
-  const imgData = canvas.toDataURL("image/jpeg",0.6);
-
-  const pdf = new jsPDF("p","pt","a4");
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  pdf.addImage(imgData,"JPEG",0,0,imgWidth,imgHeight,"","FAST");
-  pdf.save("BFS_Safety_Stand_Down.pdf");
-});
+function clearSignature(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
 </script>
 
 </body>
