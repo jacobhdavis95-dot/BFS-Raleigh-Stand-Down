@@ -105,15 +105,69 @@ canvas{
 <!-- PROJECT INFO -->
 <div class="section">
   <div class="section-title">Project Information</div>
+
   <div class="grid">
-    <div><label>Date</label><input type="date"></div>
-    <div><label>BFS Representative</label><input></div>
-    <div><label>Customer</label><input></div>
-    <div><label>Project / Jobsite</label><input id="jobsite"></div>
-    <div><label>Lot</label><input></div>
-    <div><label># Workers</label><input type="number"></div>
+
+    <!-- Row 1 -->
+    <div>
+      <label>Date</label>
+      <input type="date">
+    </div>
+    <div>
+      <label>BFS Representative</label>
+      <input type="text">
+    </div>
+
+    <!-- Row 2 -->
+    <div>
+      <label>Customer</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Building</label>
+      <input type="text">
+    </div>
+
+    <!-- Row 3 -->
+    <div>
+      <label>Project / Jobsite</label>
+      <input type="text" id="jobsite">
+    </div>
+    <div>
+      <label>Project Type</label>
+      <select>
+        <option value="">Select Type</option>
+        <option>Framing</option>
+        <option>Windows / Doors</option>
+        <option>Trim</option>
+        <option>Deck</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <!-- Row 4 -->
+    <div>
+      <label>Lot</label>
+      <input type="text">
+    </div>
+    <div>
+      <label># Workers Onsite</label>
+      <input type="number">
+    </div>
+
+    <!-- Row 5 -->
+    <div>
+      <label>Project Subcontractor</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Onsite Supervisor (Subcontractor)</label>
+      <input type="text">
+    </div>
+
   </div>
 </div>
+
 
 <!-- DETAILED SUMMARY -->
 <div class="section">
