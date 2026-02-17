@@ -339,25 +339,66 @@ canvas{
     <li>BFS Management must be notified immediately by phone.</li>
     <li>An incident report must be submitted within 24 hours.</li>
 
-  
-<!-- ATTENDEE INITIALS -->
+  <!-- ATTENDEE SIGNED INITIALS -->
 <div class="section">
-  <div class="section-title">Stand-Down Attendee Initials</div>
-  <p>Please have all attendees initial below (up to 10 participants).</p>
+  <div class="section-title">Stand-Down Attendee Signed Initials</div>
+  <p>Please have each attendee initial below (up to 10 participants).</p>
 
-  <div class="grid">
-    <input type="text" placeholder="Initials 1">
-    <input type="text" placeholder="Initials 2">
-    <input type="text" placeholder="Initials 3">
-    <input type="text" placeholder="Initials 4">
-    <input type="text" placeholder="Initials 5">
-    <input type="text" placeholder="Initials 6">
-    <input type="text" placeholder="Initials 7">
-    <input type="text" placeholder="Initials 8">
-    <input type="text" placeholder="Initials 9">
-    <input type="text" placeholder="Initials 10">
+  <div class="initial-grid">
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(0)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(1)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(2)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(3)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(4)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(5)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(6)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(7)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(8)">Clear</button>
+    </div>
+
+    <div class="initial-box">
+      <canvas class="initialPad" width="250" height="80"></canvas>
+      <button type="button" onclick="clearInitial(9)">Clear</button>
+    </div>
+
   </div>
 </div>
+
 
 <!-- BFS REPRESENTATIVE SIGNATURE -->
 <div class="section">
@@ -422,6 +463,56 @@ function clearSubSignature(){
 }
 </script>
 
+ <script>
+const initialPads = document.querySelectorAll(".initialPad");
+let drawingIndex = null;
+
+initialPads.forEach((canvas, index) => {
+  const ctx = canvas.getContext("2d");
+
+  canvas.addEventListener("mousedown", () => drawingIndex = index);
+  canvas.addEventListener("mouseup", () => drawingIndex = null);
+  canvas.addEventListener("mouseleave", () => drawingIndex = null);
+
+  canvas.addEventListener("mousemove", (e) => {
+    if (drawingIndex !== index) return;
+
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  });
+
+  // Touch support
+  canvas.addEventListener("touchstart", () => drawingIndex = index);
+  canvas.addEventListener("touchend", () => drawingIndex = null);
+  canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    if (drawingIndex !== index) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+  });
+});
+
+function clearInitial(index){
+  const canvas = initialPads[index];
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+</script>
+   
 </body>
 </html>
 
