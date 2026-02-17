@@ -1,34 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Builders FirstSource | Safety Stand-Down</title>
-
 <link rel="manifest" href="manifest.json"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
-body {
-  color:#1F2A44;
-  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  margin:0;
-  background:#f5f5f5;
-}
-
-header {
-  background:#C8102E;
-  color:#ffffff;
-  padding:16px;
-  text-align:center;
-}
-</style>
-</head>
-
 @media print {
   body {
     background: #ffffff !important;
@@ -38,25 +18,19 @@ header {
     background: #ffffff !important;
   }
 }
- <div class="section">
-  <label>Photos</label>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div id="photoPreview"></div>
-</div>
 
 body{color:#1F2A44;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f5f5f5}
 header{background:#C8102E;color:#ffffff;padding:16px;text-align:center}
-// LOGO
-pdf.addImage(logo, "PNG", 40, 15, 140, 35);
-
-// HEADER TEXT
-pdf.setFontSize(10);
-pdf.text("Safety Stand Down Report", 200, 35);
-
-pdf.setFontSize(9);
-pdf.text(`Jobsite: ${jobsite}`, 40, 65);
-pdf.text(`Date: ${today}`, pageWidth - 120, 65);
-
+h1{font-size:20px;margin:0}
+.container{padding:16px}
+label{display:block;margin-top:12px;font-weight:700;color:#1F2A44}
+input,select,textarea,button{width:100%;padding:10px;margin-top:6px;font-size:16px;border-radius:6px;border:1px solid #ccc}
+button{margin-top:20px;background:#C8102E;color:#fff;border:none;font-weight:700}
+button:hover{background:#A50E25}
+.section{background:#fff;border-radius:8px;padding:14px;margin-top:16px}
+.small{font-size:12px;color:#777;text-align:center;margin-top:12px}
+a{color:#C8102E;font-weight:600;text-decoration:none}
+</style>
 
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -174,10 +148,10 @@ function generatePDF() {
     <textarea rows="4"></textarea>
   </div>
 
-  
-  
-  
-  
+
+
+
+
   <div class="section" style="border-left:6px solid #1F2A44;">
     <label style="font-size:18px;">Safety Violation Breakdown</label>
     <p class="small"><em>Lista de Violación de Seguridad</em></p>
@@ -224,7 +198,7 @@ function generatePDF() {
   </div>
 
 
-  
+
   <div class="section" style="border-left:6px solid #1F2A44;">
     <label style="font-size:18px;">Severe Weather</label>
     <p><strong>English:</strong> All framing crews are responsible for properly bracing and safely installing wall panels and trusses.
@@ -290,8 +264,8 @@ function generatePDF() {
     <p><em>No se permiten andamios construidos en el sitio de trabajo de BFS.
     Solo se permiten andamios de acero ensamblados.</em></p>
 
-    
-    
+
+
   </div>
 
   <div class="section" style="border-left:6px solid #1F2A44;">
@@ -303,7 +277,7 @@ function generatePDF() {
     <p><em>Todos los equipos de enmarcado son responsables de apuntalar adecuadamente e instalar de forma segura
     los paneles de pared y vigas. BFS recomienda encarecidamente que NO se instalen durante clima severo.</em></p>
 
-    
+
   </div>
 
   <div class="section" style="border-left:6px solid #1F2A44;">
@@ -311,7 +285,7 @@ function generatePDF() {
     <p>The use of propane space heaters and burn piles on site are prohibited.</p>
     <p><em>Está prohibido el uso de calentadores a propano y fogatas en el sitio.</em></p>
 
-    
+
   </div>
 
   <div class="section" style="border-left:6px solid #1F2A44;">
@@ -346,8 +320,8 @@ function generatePDF() {
     <p>All subcontractors must comply with Builders FirstSource Safety Management Program requirements,
     including training, PPE usage, hazard reporting, and adherence to all jobsite safety rules.</p>
 
-    
-    
+
+
   </div>
 
 
@@ -529,8 +503,7 @@ function generatePDF() {
 
   <div class="section" style="border-left:6px solid #1F2A44;">
     <label>Photos</label>
-    <input type="file" id="photoUpload" accept="image/*" <input type="file" id="photoUpload" accept="image/*">
- multiple />
+    <input type="file" id="photoUpload" accept="image/*" capture="environment" multiple />
     <div class="small">Take photos or upload from device (multiple allowed)</div>
     <div id="photoPreview" style="margin-top:12px;"></div>
   </div>
@@ -606,45 +579,42 @@ document.getElementById('photoUpload').addEventListener('change', function(event
     pdf.save("BFS_Safety_Stand_Down.pdf");
   });
 </script>
-  <script>
-document.getElementById("savePdfBtn").addEventListener("click", async () => {
-  const { jsPDF } = window.jspdf;
-
-  const btn = document.getElementById("savePdfBtn");
-  btn.style.display = "none";
-
-  const element = document.getElementById("pdfContent");
-
-  const canvas = await html2canvas(element, {
-    scale: 1,
-    useCORS: true
-  });
-
-  btn.style.display = "block";
-
-  const imgData = canvas.toDataURL("image/jpeg", 0.7);
-
-  const pdf = new jsPDF("p", "pt", "a4");
-
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
-
-  pdf.save("BFS_Safety_Stand_Down.pdf");
-});
-</script>
-
 </body>
 </html>
 <script>
   const AUTOSAVE_KEY = "bfs_safety_stand_down_autosave";
 
+  // Save form data
+  function saveForm() {
+    const data = {};
+    document.querySelectorAll("input, textarea, select").forEach(el => {
+      if (el.type === "checkbox" || el.type === "radio") {
+        data[el.name || el.id] = el.checked;
+      } else {
+        data[el.name || el.id] = el.value;
+      }
+    });
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(data));
+  }
  <script>
 document.getElementById("savePdfBtn").addEventListener("click", async () => {
   const { jsPDF } = window.jspdf;
 
+  // Load form data
+  function loadForm() {
+    const saved = JSON.parse(localStorage.getItem(AUTOSAVE_KEY));
+    if (!saved) return;
+
+    document.querySelectorAll("input, textarea, select").forEach(el => {
+      const key = el.name || el.id;
+      if (saved[key] !== undefined) {
+        if (el.type === "checkbox" || el.type === "radio") {
+          el.checked = saved[key];
+        } else {
+          el.value = saved[key];
+        }
+      }
+    });
   const jobsite =
     document.getElementById("jobsite")?.value || "Jobsite";
 
@@ -717,6 +687,8 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
     }
   }
 
+  document.addEventListener("input", saveForm);
+  window.addEventListener("load", loadForm);
   pdf.save(`BFS_Safety_Stand_Down_${jobsite}_${today}.pdf`);
 });
 </script>
