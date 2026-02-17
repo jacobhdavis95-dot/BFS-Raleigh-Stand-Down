@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1></script>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Builders FirstSource | Safety Stand-Down</title>
@@ -39,8 +39,7 @@ a{color:#C8102E;font-weight:600;text-decoration:none}
 
 </head>
 <script>
-function generatePDF() {
-  function generatePDF() {
+
   const element = document.getElementById("pdfContent");
 
   syncInputsForPDF(element);
@@ -500,13 +499,56 @@ function generatePDF() {
     <div class="small">Add inspection entries as job progresses</div>
   </div>
 
+<div class="section">
+  <label>Photos</label>
+  <input type="file" id="photoUpload" accept="image/*" multiple>
+  <div class="small">Upload from gallery (multiple allowed)</div>
+  <div id="photoPreview" style="margin-top:12px;"></div>
+</div>
+<script>
+let compressedImages = [];
 
-  <div class="section" style="border-left:6px solid #1F2A44;">
-    <label>Photos</label>
-    <input type="file" id="photoUpload" accept="image/*" capture="environment" multiple />
-    <div class="small">Take photos or upload from device (multiple allowed)</div>
-    <div id="photoPreview" style="margin-top:12px;"></div>
-  </div>
+document.getElementById('photoUpload').addEventListener('change', function(event) {
+  const preview = document.getElementById('photoPreview');
+  preview.innerHTML = '';
+  compressedImages = [];
+
+  Array.from(event.target.files).forEach(file => {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const MAX_WIDTH = 1200;
+        const scaleSize = MAX_WIDTH / img.width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const compressed = canvas.toDataURL("image/jpeg", 0.6);
+        compressedImages.push(compressed);
+
+        const previewImg = document.createElement('img');
+        previewImg.src = compressed;
+        previewImg.style.width = '100%';
+        previewImg.style.marginTop = '10px';
+        previewImg.style.borderRadius = '8px';
+        preview.appendChild(previewImg);
+      };
+    };
+
+    reader.readAsDataURL(file);
+  });
+});
+</script>
+
 
   <button id="savePdfBtn" type="button">
   Save Safety Stand Down (PDF)
@@ -579,6 +621,40 @@ document.getElementById('photoUpload').addEventListener('change', function(event
     pdf.save("BFS_Safety_Stand_Down.pdf");
   });
 </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+document.getElementById("savePdfBtn").addEventListener("click", async () => {
+  const { jsPDF } = window.jspdf;
+
+  const btn = document.getElementById("savePdfBtn");
+  btn.style.display = "none";
+
+  const element = document.getElementById("pdfContent");
+
+  const canvas = await html2canvas(element, {
+    scale: 0.9,
+    useCORS: true,
+    logging: false
+  });
+
+  btn.style.display = "block";
+
+  const imgData = canvas.toDataURL("image/jpeg", 0.6);
+
+  const pdf = new jsPDF("p", "pt", "a4");
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
+
+  pdf.save("BFS_Safety_Stand_Down.pdf");
+});
+</script>
+
 </body>
 </html>
 <script>
