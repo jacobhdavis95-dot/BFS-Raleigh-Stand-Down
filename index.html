@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BFS | Safety Stand-Down</title>
+<title>Builders FirstSource | Safety Stand-Down</title>
 
 <style>
 body{
@@ -16,26 +16,8 @@ body{
 header{
   background:#C8102E;
   color:#fff;
-  padding:14px;
+  padding:18px;
   text-align:center;
-}
-
-.drive{
-  background:#1F2A44;
-  color:#fff;
-  text-align:center;
-  padding:6px;
-  font-size:13px;
-  letter-spacing:1px;
-}
-
-.raleigh{
-  background:#C8102E;
-  color:#fff;
-  text-align:center;
-  padding:6px;
-  font-size:12px;
-  font-weight:600;
 }
 
 .container{
@@ -98,14 +80,16 @@ button:hover{
   background:#a50e25;
 }
 
-canvas{
-  border:2px solid #C8102E;
-  border-radius:8px;
-  background:#fff;
-  margin-top:10px;
+.small{
+  font-size:12px;
+  color:#666;
+  margin-top:8px;
 }
 
-.small{ font-size:12px; color:#666; }
+img{
+  border-radius:8px;
+  margin-top:10px;
+}
 </style>
 </head>
 
@@ -116,128 +100,185 @@ canvas{
   <div>Safety Stand-Down</div>
 </header>
 
-<div class="drive">DRIVE TO ZERO</div>
-<div class="raleigh">RALEIGH INSTALL SERVICES</div>
-
 <div class="container" id="pdfContent">
 
 <!-- PROJECT INFO -->
 <div class="section">
   <div class="section-title">Project Information / Información del Proyecto</div>
   <div class="grid">
-    <div><label>Date / Fecha</label><input type="date"></div>
-    <div><label>BFS Rep</label><input></div>
-    <div><label>Customer / Cliente</label><input></div>
-    <div><label>Project / Proyecto</label><input id="jobsite"></div>
-    <div><label>Lot / Lote</label><input></div>
-    <div><label># Workers</label><input type="number"></div>
+    <div>
+      <label>Date / Fecha</label>
+      <input type="date">
+    </div>
+    <div>
+      <label>BFS Representative / Representante BFS</label>
+      <input>
+    </div>
+    <div>
+      <label>Customer / Cliente</label>
+      <input>
+    </div>
+    <div>
+      <label>Project / Proyecto</label>
+      <input id="jobsite">
+    </div>
+    <div>
+      <label>Lot / Lote</label>
+      <input>
+    </div>
+    <div>
+      <label># Workers / # Trabajadores</label>
+      <input type="number">
+    </div>
   </div>
 </div>
 
-<!-- SIGNATURE PAD -->
+<!-- SAFETY SUMMARY -->
 <div class="section">
-  <div class="section-title">Supervisor Signature / Firma</div>
-  <canvas id="signaturePad" width="800" height="200"></canvas>
-  <button type="button" onclick="clearSignature()">Clear Signature</button>
+  <div class="section-title">Safety Summary / Resumen de Seguridad</div>
+
+  <label>PPE & Safety Procedures Followed?</label>
+  <label><em>¿Se siguieron los procedimientos de seguridad?</em></label>
+  <select>
+    <option>Yes / Sí</option>
+    <option>Partial / Parcial</option>
+    <option>No</option>
+  </select>
+
+  <label>Stand-Down Summary</label>
+  <label><em>Resumen de la Reunión</em></label>
+  <textarea rows="4"></textarea>
+
+  <label>Project Issues / Corrections</label>
+  <label><em>Problemas del Proyecto / Correcciones</em></label>
+  <textarea rows="4"></textarea>
 </div>
 
-<!-- SAVE BUTTON -->
+<!-- SAFETY VIOLATIONS -->
+<div class="section">
+  <div class="section-title">Safety Violations / Violaciones</div>
+
+  <ul>
+    <li><strong>Hardhat – Glasses – Boots:</strong> $50–$100<br>
+    <em>Casco – Gafas – Botas: $50–$100</em></li>
+
+    <li><strong>Ladder Violation:</strong> $100–$250<br>
+    <em>Violación de Escalera: $100–$250</em></li>
+
+    <li><strong>Drugs or Alcohol:</strong> $500 – Termination<br>
+    <em>Drogas o Alcohol: $500 – Terminación</em></li>
+  </ul>
+</div>
+
+<!-- WORKING HOURS -->
+<div class="section">
+  <div class="section-title">Working Hours / Horario Laboral</div>
+  <ul>
+    <li>No work before 7AM or after 7PM (Mon–Fri)</li>
+    <li>No work before 9AM Saturday</li>
+    <li><strong>No work Sunday</strong></li>
+  </ul>
+  <ul>
+    <li><em>No trabajar antes de 7AM o después de 7PM</em></li>
+    <li><em>No trabajar antes de 9AM sábado</em></li>
+    <li><strong><em>No trabajar domingo</em></strong></li>
+  </ul>
+</div>
+
+<!-- SIGNATURES -->
+<div class="section">
+  <div class="section-title">Stand-Down Attendees / Firmas</div>
+  <div class="grid">
+    <input placeholder="1. Name / Nombre">
+    <input placeholder="2. Name / Nombre">
+    <input placeholder="3. Name / Nombre">
+    <input placeholder="4. Name / Nombre">
+    <input placeholder="5. Name / Nombre">
+    <input placeholder="6. Name / Nombre">
+    <input placeholder="7. Name / Nombre">
+    <input placeholder="8. Name / Nombre">
+    <input placeholder="9. Name / Nombre">
+    <input placeholder="10. Name / Nombre">
+  </div>
+</div>
+
+<!-- PHOTO UPLOAD -->
+<div class="section">
+  <div class="section-title">Photos / Fotos</div>
+  <input type="file" id="photoUpload" accept="image/*" multiple>
+  <div class="small">Upload from gallery / Subir desde galería</div>
+  <div id="photoPreview"></div>
+</div>
+
 <button id="savePdfBtn">Save Safety Stand Down (PDF)</button>
 
 </div>
 
-<!-- SIGNATURE PAD SCRIPT -->
+<!-- PHOTO COMPRESSION -->
 <script>
-const canvas = document.getElementById("signaturePad");
-const ctx = canvas.getContext("2d");
-let drawing = false;
+document.getElementById('photoUpload').addEventListener('change', function(event){
+  const preview = document.getElementById('photoPreview');
+  preview.innerHTML = '';
 
-canvas.addEventListener("mousedown", ()=> drawing=true);
-canvas.addEventListener("mouseup", ()=> drawing=false);
-canvas.addEventListener("mousemove", draw);
+  Array.from(event.target.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.src = e.target.result;
 
-canvas.addEventListener("touchstart", ()=> drawing=true);
-canvas.addEventListener("touchend", ()=> drawing=false);
-canvas.addEventListener("touchmove", function(e){
-  e.preventDefault();
-  draw(e.touches[0]);
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const MAX_WIDTH = 1000;
+        const scale = MAX_WIDTH / img.width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scale;
+
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
+        const compressed = canvas.toDataURL("image/jpeg",0.6);
+
+        const previewImg = document.createElement('img');
+        previewImg.src = compressed;
+        previewImg.style.width='100%';
+        preview.appendChild(previewImg);
+      };
+    };
+    reader.readAsDataURL(file);
+  });
 });
-
-function draw(e){
-  if(!drawing) return;
-  const rect = canvas.getBoundingClientRect();
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "#000";
-  ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-}
-
-function clearSignature(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
 </script>
 
-<!-- PDF LIBRARIES -->
+<!-- PDF GENERATION -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- PDF GENERATION -->
 <script>
 document.getElementById("savePdfBtn").addEventListener("click", async ()=>{
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p","pt","a4");
 
   const btn = document.getElementById("savePdfBtn");
   btn.style.display="none";
 
   const element = document.getElementById("pdfContent");
-  const htmlCanvas = await html2canvas(element,{ scale:0.9 });
+
+  const canvas = await html2canvas(element,{
+    scale:0.9,
+    useCORS:true
+  });
 
   btn.style.display="block";
 
-  const imgData = htmlCanvas.toDataURL("image/jpeg",0.6);
-  const sigData = document.getElementById("signaturePad").toDataURL("image/png");
+  const imgData = canvas.toDataURL("image/jpeg",0.6);
 
+  const pdf = new jsPDF("p","pt","a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
   const imgWidth = pageWidth;
-  const imgHeight = (htmlCanvas.height * imgWidth) / htmlCanvas.width;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  let heightLeft = imgHeight;
-  let position = 60;
-  let pageNumber = 1;
-
-  while(heightLeft > 0){
-
-    // HEADER WITH BFS LOGO TEXT
-    pdf.setFontSize(16);
-    pdf.text("Builders FirstSource",40,30);
-    pdf.setFontSize(10);
-    pdf.text("Raleigh Install Services | Drive to Zero",40,45);
-
-    // PAGE NUMBER
-    pdf.setFontSize(10);
-    pdf.text("Page " + pageNumber, pageWidth-70, pageHeight-10);
-
-    // MAIN CONTENT
-    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight,"","FAST");
-
-    heightLeft -= pageHeight;
-    position -= pageHeight;
-    pageNumber++;
-
-    if(heightLeft > 0) pdf.addPage();
-  }
-
-  // ADD SIGNATURE IMAGE AT END
-  pdf.addPage();
-  pdf.setFontSize(14);
-  pdf.text("Supervisor Signature",40,50);
-  pdf.addImage(sigData,"PNG",40,70,300,100);
-
+  pdf.addImage(imgData,"JPEG",0,0,imgWidth,imgHeight,"","FAST");
   pdf.save("BFS_Safety_Stand_Down.pdf");
 });
 </script>
