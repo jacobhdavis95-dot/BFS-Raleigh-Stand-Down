@@ -112,7 +112,6 @@ img{
 </header>
 
 <div class="container" id="pdfContent">
-
 <!-- PROJECT INFO -->
 <div class="section">
   <div class="section-title">Project Information</div>
@@ -130,7 +129,7 @@ img{
       <input>
     </div>
     <div>
-      <label>Project</label>
+      <label>Project / Jobsite</label>
       <input id="jobsite">
     </div>
     <div>
@@ -138,7 +137,7 @@ img{
       <input>
     </div>
     <div>
-      <label>Workers Onsite</label>
+      <label># of Workers Onsite</label>
       <input type="number">
     </div>
   </div>
@@ -146,7 +145,8 @@ img{
 
 <!-- SAFETY SUMMARY -->
 <div class="section">
-  <div class="section-title">Safety Summary</div>
+  <div class="section-title">Safety Stand-Down Summary</div>
+
   <label>PPE & Safety Procedures Followed?</label>
   <select>
     <option>Yes</option>
@@ -154,21 +154,108 @@ img{
     <option>No</option>
   </select>
 
-  <label style="margin-top:15px;">Stand-Down Summary</label>
+  <label style="margin-top:15px;">Summary of Discussion</label>
   <textarea rows="4"></textarea>
 
-  <label style="margin-top:15px;">Project Issues</label>
+  <label style="margin-top:15px;">Project Issues / Corrections</label>
   <textarea rows="4"></textarea>
 </div>
 
-<!-- PHOTOS -->
+<!-- SAFETY VIOLATION BREAKDOWN -->
 <div class="section">
-  <div class="section-title">Photos</div>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div class="small">Upload from gallery (multiple allowed)</div>
-  <div id="photoPreview"></div>
+  <div class="section-title">Safety Violation Breakdown</div>
+
+  <ul>
+    <li><strong>Hardhat – Glasses – Boots:</strong> $50–$100 per person</li>
+    <li><strong>Ladder Violation:</strong> $100–$250 per person</li>
+    <li><strong>Safety Rails:</strong> $100–$250 per person</li>
+    <li><strong>Crane Safety Violation:</strong> $100–$500 per offense</li>
+    <li><strong>Drugs or Alcohol:</strong> $500 – Termination</li>
+  </ul>
+
+  <h4>Personal Fall Protection</h4>
+  <ul>
+    <li>1st Offense: $500 per person</li>
+    <li>2nd Offense: $1,000 + written warning</li>
+    <li>3rd Offense: $1,500 + 1 month not working for BFS</li>
+    <li>4th Offense: $2,000 + 1 year not working for BFS</li>
+    <li>5th Offense: No longer working for BFS</li>
+  </ul>
+
+  <h4>Scaffolding</h4>
+  <ul>
+    <li>Site-built scaffolding is NOT allowed.</li>
+    <li>Only steel site-assembled scaffolding permitted.</li>
+    <li>First Offense: $200 per person</li>
+  </ul>
 </div>
 
+<!-- WEATHER POLICIES -->
+<div class="section">
+  <div class="section-title">Weather Policies</div>
+
+  <h4>Severe Weather</h4>
+  <p>
+    Framing crews must properly brace wall panels and trusses.
+    Installation during severe weather is strongly discouraged.
+    If materials fall or are damaged, this is considered an automatic rebuild.
+  </p>
+
+  <h4>Cold Weather</h4>
+  <p>
+    Propane heaters and burn piles are prohibited on BFS jobsites.
+  </p>
+</div>
+
+<!-- MATERIAL HANDLING -->
+<div class="section">
+  <div class="section-title">Material Handling</div>
+  <ul>
+    <li>Do NOT move material from one lot to another without BFS approval.</li>
+    <li>Unauthorized transfer may be treated as theft.</li>
+    <li>Do not install damaged material.</li>
+    <li>Once installed, the framer owns the material.</li>
+  </ul>
+</div>
+
+<!-- FOUNDATIONS -->
+<div class="section">
+  <div class="section-title">Foundations</div>
+  <ul>
+    <li>Notify builder immediately of any issues.</li>
+    <li>Document with photos.</li>
+    <li>Do not continue framing until approved solution.</li>
+  </ul>
+</div>
+
+<!-- WORKING HOURS -->
+<div class="section">
+  <div class="section-title">Working Hours</div>
+  <ul>
+    <li>No framing before 7:00 AM or after 7:00 PM (Mon–Fri)</li>
+    <li>No framing before 9:00 AM on Saturdays</li>
+    <li><strong>No work on Sundays</strong></li>
+  </ul>
+</div>
+
+<!-- SUBCONTRACTOR ACKNOWLEDGMENT -->
+<div class="section">
+  <div class="section-title">Subcontractor Safety Acknowledgment</div>
+
+  <label>Subcontractor Company</label>
+  <input type="text">
+
+  <label>Subcontractor Name (Print)</label>
+  <input type="text">
+
+  <label>Signature</label>
+  <input type="text">
+
+  <label>Date</label>
+  <input type="date">
+</div>
+
+  
 <button id="savePdfBtn" type="button">
   Save Safety Stand Down (PDF)
 </button>
@@ -251,153 +338,3 @@ document.getElementById("savePdfBtn").addEventListener("click", async ()=>{
 
 </body>
 </html>
-<!-- PROJECT INFO -->
-<div class="section">
-  <div class="section-title">Project Information</div>
-  <div class="grid">
-    <div>
-      <label>Date</label>
-      <input type="date">
-    </div>
-    <div>
-      <label>BFS Representative</label>
-      <input>
-    </div>
-    <div>
-      <label>Customer</label>
-      <input>
-    </div>
-    <div>
-      <label>Project / Jobsite</label>
-      <input id="jobsite">
-    </div>
-    <div>
-      <label>Lot / Building</label>
-      <input>
-    </div>
-    <div>
-      <label># of Workers Onsite</label>
-      <input type="number">
-    </div>
-  </div>
-</div>
-
-<!-- SAFETY SUMMARY -->
-<div class="section">
-  <div class="section-title">Safety Stand-Down Summary</div>
-  <label>PPE & Safety Procedures Followed?</label>
-  <select>
-    <option>Yes</option>
-    <option>Partial</option>
-    <option>No</option>
-  </select>
-
-  <label style="margin-top:15px;">Summary of Discussion</label>
-  <textarea rows="4"></textarea>
-
-  <label style="margin-top:15px;">Project Issues / Corrections</label>
-  <textarea rows="4"></textarea>
-</div>
-
-<!-- SAFETY VIOLATION BREAKDOWN -->
-<div class="section">
-  <div class="section-title">Safety Violation Breakdown</div>
-
-  <ul>
-    <li><strong>Hardhat – Glasses – Boots:</strong> $50–$100 per person</li>
-    <li><strong>Ladder Violation:</strong> $100–$250 per person</li>
-    <li><strong>Safety Rails:</strong> $100–$250 per person</li>
-    <li><strong>Crane Safety Violation:</strong> $100–$500 per offense</li>
-    <li><strong>Drugs or Alcohol:</strong> $500 – Termination</li>
-  </ul>
-
-  <h4>Personal Fall Protection</h4>
-  <ul>
-    <li>1st Offense: $500 per person</li>
-    <li>2nd Offense: $1,000 + written warning</li>
-    <li>3rd Offense: $1,500 + 1 month not working for BFS</li>
-    <li>4th Offense: $2,000 + 1 year not working for BFS</li>
-    <li>5th Offense: No longer working for BFS</li>
-  </ul>
-
-  <h4>Scaffolding</h4>
-  <ul>
-    <li>Site-built scaffolding is NOT allowed.</li>
-    <li>Only steel site-assembled scaffolding permitted.</li>
-    <li>First Offense: $200 per person</li>
-  </ul>
-</div>
-
-<!-- WEATHER POLICIES -->
-<div class="section">
-  <div class="section-title">Weather Policies</div>
-
-  <h4>Severe Weather</h4>
-  <p>
-    Framing crews are responsible for properly bracing and safely installing wall panels and trusses.
-    Installation during severe weather is strongly discouraged.
-    If panels or trusses fall or are damaged, this is considered an automatic rebuild.
-  </p>
-
-  <h4>Cold Weather</h4>
-  <p>
-    Use of propane space heaters and burn piles on site are prohibited.
-  </p>
-</div>
-
-<!-- MATERIAL HANDLING -->
-<div class="section">
-  <div class="section-title">Material Handling</div>
-  <ul>
-    <li>Material may NOT be taken from one lot to another without BFS approval.</li>
-    <li>Unauthorized transfer may be treated as theft.</li>
-    <li>Do not install damaged material.</li>
-    <li>Once installed, the framer owns the material.</li>
-  </ul>
-</div>
-
-<!-- FOUNDATIONS -->
-<div class="section">
-  <div class="section-title">Foundations</div>
-  <ul>
-    <li>Notify builder/project manager immediately of issues.</li>
-    <li>Document with photos.</li>
-    <li>Do not continue framing until solution is approved.</li>
-  </ul>
-</div>
-
-<!-- WORKING HOURS -->
-<div class="section">
-  <div class="section-title">Working Hours</div>
-  <ul>
-    <li>No framing before 7:00 AM or after 7:00 PM (Mon–Fri)</li>
-    <li>No framing before 9:00 AM on Saturdays</li>
-    <li><strong>No work on Sundays</strong></li>
-  </ul>
-</div>
-
-<!-- SUBCONTRACTOR ACKNOWLEDGMENT -->
-<div class="section">
-  <div class="section-title">Subcontractor Safety Acknowledgment</div>
-
-  <label>Subcontractor Company</label>
-  <input type="text">
-
-  <label>Subcontractor Name (Print)</label>
-  <input type="text">
-
-  <label>Signature</label>
-  <input type="text">
-
-  <label>Date</label>
-  <input type="date">
-</div>
-
-<!-- PHOTOS -->
-<div class="section">
-  <div class="section-title">Photos</div>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div class="small">Upload from gallery (multiple allowed)</div>
-  <div id="photoPreview"></div>
-</div>
-
