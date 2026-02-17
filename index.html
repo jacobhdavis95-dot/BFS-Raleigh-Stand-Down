@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Builders FirstSource | Safety Stand-Down</title>
+
 <link rel="manifest" href="manifest.json"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
+body {
+  color:#1F2A44;
+  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0;
+  background:#f5f5f5;
+}
+
+header {
+  background:#C8102E;
+  color:#ffffff;
+  padding:16px;
+  text-align:center;
+}
+</style>
+</head>
+
 @media print {
   body {
     background: #ffffff !important;
@@ -18,8 +38,12 @@
     background: #ffffff !important;
   }
 }
- const logo = AiIEEQIiBBECIgQRAiIEEQIiBBECIgQRAiIEEQIiBBECIgQRAiIEEQIiBBGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERggiBFzxzZL5aWCHVAAAAAElFTkSuQmCC
- 
+ <div class="section">
+  <label>Photos</label>
+  <input type="file" id="photoUpload" accept="image/*" multiple>
+  <div id="photoPreview"></div>
+</div>
+
 body{color:#1F2A44;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f5f5f5}
 header{background:#C8102E;color:#ffffff;padding:16px;text-align:center}
 // LOGO
@@ -582,6 +606,36 @@ document.getElementById('photoUpload').addEventListener('change', function(event
     pdf.save("BFS_Safety_Stand_Down.pdf");
   });
 </script>
+  <script>
+document.getElementById("savePdfBtn").addEventListener("click", async () => {
+  const { jsPDF } = window.jspdf;
+
+  const btn = document.getElementById("savePdfBtn");
+  btn.style.display = "none";
+
+  const element = document.getElementById("pdfContent");
+
+  const canvas = await html2canvas(element, {
+    scale: 1,
+    useCORS: true
+  });
+
+  btn.style.display = "block";
+
+  const imgData = canvas.toDataURL("image/jpeg", 0.7);
+
+  const pdf = new jsPDF("p", "pt", "a4");
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+
+  pdf.save("BFS_Safety_Stand_Down.pdf");
+});
+</script>
+
 </body>
 </html>
 <script>
