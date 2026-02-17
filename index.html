@@ -18,19 +18,21 @@
     background: #ffffff !important;
   }
 }
+ const logo = AiIEEQIiBBECIgQRAiIEEQIiBBECIgQRAiIEEQIiBBECIgQRAiIEEQIiBBGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERgggBEYIIARGCCAERggiBFzxzZL5aWCHVAAAAAElFTkSuQmCC
  
 body{color:#1F2A44;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f5f5f5}
 header{background:#C8102E;color:#ffffff;padding:16px;text-align:center}
-h1{font-size:20px;margin:0}
-.container{padding:16px}
-label{display:block;margin-top:12px;font-weight:700;color:#1F2A44}
-input,select,textarea,button{width:100%;padding:10px;margin-top:6px;font-size:16px;border-radius:6px;border:1px solid #ccc}
-button{margin-top:20px;background:#C8102E;color:#fff;border:none;font-weight:700}
-button:hover{background:#A50E25}
-.section{background:#fff;border-radius:8px;padding:14px;margin-top:16px}
-.small{font-size:12px;color:#777;text-align:center;margin-top:12px}
-a{color:#C8102E;font-weight:600;text-decoration:none}
-</style>
+// LOGO
+pdf.addImage(logo, "PNG", 40, 15, 140, 35);
+
+// HEADER TEXT
+pdf.setFontSize(10);
+pdf.text("Safety Stand Down Report", 200, 35);
+
+pdf.setFontSize(9);
+pdf.text(`Jobsite: ${jobsite}`, 40, 65);
+pdf.text(`Date: ${today}`, pageWidth - 120, 65);
+
 
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
