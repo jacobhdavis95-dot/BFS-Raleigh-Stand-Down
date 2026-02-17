@@ -373,6 +373,58 @@ canvas{
   <canvas id="subSignaturePad" width="800" height="200"></canvas>
   <button type="button" onclick="clearSubSignature()">Clear Signature</button>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+document.getElementById("savePdfBtn").addEventListener("click", async () => {
+
+  const { jsPDF } = window.jspdf;
+
+  const btn = document.getElementById("savePdfBtn");
+  btn.style.display = "none"; // Hide button from PDF
+
+  const element = document.querySelector(".container");
+
+  const canvas = await html2canvas(element, {
+    scale: 1,
+    useCORS: true,
+    logging: false
+  });
+
+  btn.style.display = "block";
+
+  const imgData = canvas.toDataURL("image/jpeg", 0.8);
+
+  const pdf = new jsPDF("p", "pt", "a4");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+  let pageNumber = 1;
+
+  while (heightLeft > 0) {
+
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight, undefined, "FAST");
+
+    pdf.setFontSize(10);
+    pdf.text(`Page ${pageNumber}`, pageWidth - 50, pageHeight - 10);
+
+    heightLeft -= pageHeight;
+    position -= pageHeight;
+    pageNumber++;
+
+    if (heightLeft > 0) {
+      pdf.addPage();
+    }
+  }
+
+  pdf.save("BFS_Safety_Stand_Down.pdf");
+});
+</script>
 
 </script>
 <script>
@@ -664,6 +716,10 @@ window.addEventListener("load", function () {
   });
 });
 </script>
+    
+<button id="savePdfBtn" style="margin-top:20px;">
+  Save Safety Stand Down (PDF)
+</button>
 
 </body>
 </html>
