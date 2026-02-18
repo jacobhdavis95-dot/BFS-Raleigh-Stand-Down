@@ -448,10 +448,6 @@ window.addEventListener("load", function(){
 });
 </script>
 
-</body>
-
-<!-- BFS REPRESENTATIVE SIGNATURE -->
-<div class="section">
   <div class="section-title">BFS Representative Signature</div>
   <canvas id="bfsSignaturePad"></canvas>
   <button onclick="clearCanvas('bfsSignaturePad')">Clear Signature</button>
@@ -521,7 +517,7 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
 </script>
    <script>
 
-initialPads.forEach((canvas, index) => {
+
   const ctx = canvas.getContext("2d");
 
   // Set proper resolution
@@ -697,7 +693,10 @@ function clearCanvas(id){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 </script>
-    
+    </body>
+
+<!-- BFS REPRESENTATIVE SIGNATURE -->
+<div class="section">
 </div> <!-- CLOSES .container -->
 
 <button id="savePdfBtn">
@@ -756,8 +755,6 @@ window.addEventListener("load", function(){
   document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
     const { jsPDF } = window.jspdf;
-
-    const element = document.querySelector("#pdfContent");
 
     const canvas = await html2canvas(element, {
       scale: 3,                // Higher = sharper
@@ -823,81 +820,6 @@ function addHeader(pdf, pageNumber) {
 
 }
 <script>
-  <script>
-
-  const canvas = document.getElementById(canvasId);
-  const ctx = canvas.getContext("2d");
-
-  function resizeCanvas() {
-    const ratio = window.devicePixelRatio || 1;
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
-
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
-
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(ratio, ratio);
-
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#000";
-  }
-
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-
-  let drawing = false;
-
-  function getPosition(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  }
-
-  function start(e) {
-    drawing = true;
-    const pos = getPosition(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-  }
-
-  function draw(e) {
-    if (!drawing) return;
-    e.preventDefault();
-    const pos = getPosition(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-  }
-
-  function stop() {
-    drawing = false;
-  }
-
-  canvas.addEventListener("mousedown", start);
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("mouseup", stop);
-  canvas.addEventListener("mouseleave", stop);
-
-  canvas.addEventListener("touchstart", start, { passive:false });
-  canvas.addEventListener("touchmove", draw, { passive:false });
-  canvas.addEventListener("touchend", stop);
-}
-
-function clearCanvas(id) {
-  const canvas = document.getElementById(id);
-  const ctx = canvas.getContext("2d");
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-window.addEventListener("load",
-});
-</script>
 
 </body>
 </html>
