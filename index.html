@@ -447,7 +447,7 @@ window.addEventListener("load", function(){
   enableSignature("subSignaturePad");
 });
 </script>
-
+<div class="section">
   <div class="section-title">BFS Representative Signature</div>
   <canvas id="bfsSignaturePad"></canvas>
   <button onclick="clearCanvas('bfsSignaturePad')">Clear Signature</button>
@@ -515,13 +515,7 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
  <script>
 
 </script>
-   <script>
-
-
-  const ctx = canvas.getContext("2d");
-
-  // Set proper resolution
-  function resizeCanvas(){
+ 
     const ratio = window.devicePixelRatio || 1;
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = 80 * ratio;
@@ -529,6 +523,87 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   }
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
+<script>
+function enableInitialPads() {
+
+  const pads = document.querySelectorAll(".initialPad");
+
+  pads.forEach((canvas, index) => {
+
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
+
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(ratio, ratio);
+
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+    }
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let drawing = false;
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function start(e) {
+      drawing = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stop() {
+      drawing = false;
+    }
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stop);
+    canvas.addEventListener("mouseleave", stop);
+
+    canvas.addEventListener("touchstart", start, { passive:false });
+    canvas.addEventListener("touchmove", draw, { passive:false });
+    canvas.addEventListener("touchend", stop);
+  });
+}
+
+function clearInitial(index){
+  const pads = document.querySelectorAll(".initialPad");
+  const canvas = pads[index];
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+window.addEventListener("load", function(){
+  enableInitialPads();
+});
+</script>
 
   let drawing = false;
 
