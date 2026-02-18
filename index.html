@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>BFS | Safety Stand-Down</title>
-  
+
 <style>
 body{
   font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
@@ -437,17 +437,8 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
 });
 </script>
 
-</script>
-<script>
-// BFS Signature Pad
-
-</script>
-
  <script>
 
-let drawingIndex = null;
-
-initialPads.forEach((canvas, index) => {
   const ctx = canvas.getContext("2d");
 
   canvas.addEventListener("mousedown", () => drawingIndex = index);
@@ -493,7 +484,6 @@ function clearInitial(index){
 }
 </script>
    <script>
-const initialPads = document.querySelectorAll(".initialPad");
 
 initialPads.forEach((canvas, index) => {
   const ctx = canvas.getContext("2d");
@@ -601,7 +591,6 @@ document.getElementById('photoUpload').addEventListener('change', function(event
 </script>
     <script>
 <script>
-function setupSignaturePad(canvasId) {
   const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext("2d");
 
@@ -672,9 +661,7 @@ function clearCanvas(id){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-window.addEventListener("load", function(){
-  setupSignaturePad("bfsSignaturePad");
-  setupSignaturePad("subSignaturePad");
+window.addEventListener("load",
 });
 </script>
     
@@ -731,7 +718,6 @@ window.addEventListener("load", function(){
 
 });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
@@ -808,7 +794,6 @@ function addHeader(pdf, pageNumber) {
 }
 <script>
   <script>
-function initSignaturePad(canvasId) {
 
   const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext("2d");
@@ -880,9 +865,7 @@ function clearCanvas(id) {
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-window.addEventListener("load", function(){
-  initSignaturePad("bfsSignaturePad");
-  initSignaturePad("subSignaturePad");
+window.addEventListener("load",
 });
 </script>
 
