@@ -98,7 +98,6 @@ canvas{
   }
 }
 
-}
 </style>
 </head>
 
@@ -441,54 +440,11 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
 </script>
 <script>
 // BFS Signature Pad
-const bfsCanvas = document.getElementById("bfsSignaturePad");
-const bfsCtx = bfsCanvas.getContext("2d");
-let bfsDrawing = false;
 
-bfsCanvas.addEventListener("mousedown",()=>bfsDrawing=true);
-bfsCanvas.addEventListener("mouseup",()=>bfsDrawing=false);
-bfsCanvas.addEventListener("mousemove",(e)=>{
-  if(!bfsDrawing) return;
-  const rect=bfsCanvas.getBoundingClientRect();
-  bfsCtx.lineWidth=2;
-  bfsCtx.lineCap="round";
-  bfsCtx.strokeStyle="#000";
-  bfsCtx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
-  bfsCtx.stroke();
-  bfsCtx.beginPath();
-  bfsCtx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
-});
-
-function clearBFSSignature(){
-  bfsCtx.clearRect(0,0,bfsCanvas.width,bfsCanvas.height);
-}
-
-// Subcontractor Signature Pad
-const subCanvas = document.getElementById("subSignaturePad");
-const subCtx = subCanvas.getContext("2d");
-let subDrawing = false;
-
-subCanvas.addEventListener("mousedown",()=>subDrawing=true);
-subCanvas.addEventListener("mouseup",()=>subDrawing=false);
-subCanvas.addEventListener("mousemove",(e)=>{
-  if(!subDrawing) return;
-  const rect=subCanvas.getBoundingClientRect();
-  subCtx.lineWidth=2;
-  subCtx.lineCap="round";
-  subCtx.strokeStyle="#000";
-  subCtx.lineTo(e.clientX-rect.left,e.clientY-rect.top);
-  subCtx.stroke();
-  subCtx.beginPath();
-  subCtx.moveTo(e.clientX-rect.left,e.clientY-rect.top);
-});
-
-function clearSubSignature(){
-  subCtx.clearRect(0,0,subCanvas.width,subCanvas.height);
-}
 </script>
 
  <script>
-const initialPads = document.querySelectorAll(".initialPad");
+
 let drawingIndex = null;
 
 initialPads.forEach((canvas, index) => {
@@ -850,6 +806,83 @@ function addHeader(pdf, pageNumber) {
   pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 8);
 
 }
+<script>
+function initSignaturePad(canvasId) {
+
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(ratio, ratio);
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+  }
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  let drawing = false;
+
+  function getPosition(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  }
+
+  function start(e) {
+    drawing = true;
+    const pos = getPosition(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }
+
+  function draw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const pos = getPosition(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }
+
+  function stop() {
+    drawing = false;
+  }
+
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", stop);
+  canvas.addEventListener("mouseleave", stop);
+
+  canvas.addEventListener("touchstart", start, { passive:false });
+  canvas.addEventListener("touchmove", draw, { passive:false });
+  canvas.addEventListener("touchend", stop);
+}
+
+function clearCanvas(id) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+window.addEventListener("load", function(){
+  initSignaturePad("bfsSignaturePad");
+  initSignaturePad("subSignaturePad");
+});
 </script>
 
 </body>
