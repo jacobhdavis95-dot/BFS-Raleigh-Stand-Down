@@ -83,9 +83,21 @@ button{
   margin-top:20px;
 }
 canvas{
+  width:100%;
+  height:120px;          /* Desktop height */
   border:2px solid #C8102E;
   border-radius:8px;
   margin-top:10px;
+  touch-action:none;
+}
+
+/* Smaller on phones */
+@media (max-width:600px){
+  canvas{
+    height:90px;
+  }
+}
+
 }
 </style>
 </head>
@@ -363,15 +375,15 @@ canvas{
 <!-- BFS REPRESENTATIVE SIGNATURE -->
 <div class="section">
   <div class="section-title">BFS Representative Signature</div>
-  <canvas id="bfsSignaturePad" width="800" height="200"></canvas>
-  <button type="button" onclick="clearBFSSignature()">Clear Signature</button>
+  <canvas id="bfsSignaturePad"></canvas>
+  <button onclick="clearCanvas('bfsSignaturePad')">Clear Signature</button>
 </div>
 
 <!-- SUBCONTRACTOR REPRESENTATIVE SIGNATURE -->
 <div class="section">
   <div class="section-title">Subcontractor Representative Signature</div>
-  <canvas id="subSignaturePad" width="800" height="200"></canvas>
-  <button type="button" onclick="clearSubSignature()">Clear Signature</button>
+  <canvas id="subSignaturePad"></canvas>
+  <button onclick="clearCanvas('subSignaturePad')">Clear Signature</button>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -632,20 +644,23 @@ document.getElementById('photoUpload').addEventListener('change', function(event
 });
 </script>
     <script>
+<script>
 function setupSignaturePad(canvasId) {
   const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext("2d");
 
   function resizeCanvas() {
     const ratio = window.devicePixelRatio || 1;
+
     const width = canvas.offsetWidth;
     const height = canvas.offsetHeight;
 
     canvas.width = width * ratio;
     canvas.height = height * ratio;
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // reset
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(ratio, ratio);
+
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#000";
@@ -656,64 +671,54 @@ function setupSignaturePad(canvasId) {
 
   let drawing = false;
 
-  function startDraw(e) {
-    drawing = true;
-    ctx.beginPath();
+  function getPosition(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.clientX || e.touches[0].clientX;
+    const clientY = e.clientY || e.touches[0].clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
   }
 
-  function stopDraw() {
-    drawing = false;
+  function startDraw(e) {
+    drawing = true;
+    const pos = getPosition(e);
     ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
   }
 
   function draw(e) {
     if (!drawing) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX || e.touches[0].clientX) - rect.left;
-    const y = (e.clientY || e.touches[0].clientY) - rect.top;
-
-    ctx.lineTo(x, y);
+    e.preventDefault();
+    const pos = getPosition(e);
+    ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
   }
 
-  // Mouse
-  canvas.addEventListener("mousedown", startDraw);
-  canvas.addEventListener("mouseup", stopDraw);
-  canvas.addEventListener("mouseout", stopDraw);
-  canvas.addEventListener("mousemove", draw);
+  function stopDraw() {
+    drawing = false;
+  }
 
-  // Touch
-  canvas.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    startDraw(e);
-  });
-  canvas.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    stopDraw();
-  });
-  canvas.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    draw(e);
-  });
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", stopDraw);
+  canvas.addEventListener("mouseleave", stopDraw);
+
+  canvas.addEventListener("touchstart", startDraw);
+  canvas.addEventListener("touchmove", draw);
+  canvas.addEventListener("touchend", stopDraw);
 }
 
-function clearCanvas(id) {
+function clearCanvas(id){
   const canvas = document.getElementById(id);
   const ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-// Initialize pads AFTER page loads
-window.addEventListener("load", function () {
+window.addEventListener("load", function(){
   setupSignaturePad("bfsSignaturePad");
-setupSignaturePad("subSignaturePad");
-
-  document.querySelectorAll(".initialPad").forEach((canvas) => {
-    setupSignaturePad(canvas.id);
-  });
+  setupSignaturePad("subSignaturePad");
 });
 </script>
     
@@ -820,7 +825,7 @@ window.addEventListener("load", function(){
     }
 
     pdf.save("BFS_Safety_Stand_Down.pdf");
-
+    
   });
 
 });
