@@ -708,16 +708,13 @@ function clearCanvas(id) {
 
 // Initialize pads AFTER page loads
 window.addEventListener("load", function () {
-  setupSignaturePad("bfsSignature");
-  setupSignaturePad("subSignature");
+  setupSignaturePad("bfsSignaturePad");
+setupSignaturePad("subSignaturePad");
 
   document.querySelectorAll(".initialPad").forEach((canvas) => {
     setupSignaturePad(canvas.id);
   });
 });
-  <button id="savePdfBtn" style="margin-top:20px;">
-  Save Safety Stand Down (PDF)
-</button>
 </script>
     
 </div> <!-- CLOSES .container -->
@@ -726,6 +723,32 @@ window.addEventListener("load", function () {
   Save Safety Stand Down (PDF)
 </button>
 
+<script src="html2canvas"></script>
+<script src="jspdf"></script>
+
+<script>
+window.addEventListener("load", function(){
+
+  document.getElementById("savePdfBtn").addEventListener("click", async () => {
+
+    const { jsPDF } = window.jspdf;
+    const element = document.querySelector(".container");
+
+    const canvas = await html2canvas(element, { scale: 1 });
+    const imgData = canvas.toDataURL("image/jpeg", 0.8);
+
+    const pdf = new jsPDF("p", "pt", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+    pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, imgHeight);
+    pdf.save("BFS_Safety_Stand_Down.pdf");
+
+  });
+
+});
+</script>
 
 </body>
 </html>
+
