@@ -770,6 +770,82 @@ window.addEventListener("load", function(){
 
 });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+window.addEventListener("load", function(){
+
+  document.getElementById("savePdfBtn").addEventListener("click", async () => {
+
+    const { jsPDF } = window.jspdf;
+
+    const element = document.querySelector("#pdfContent");
+
+    const canvas = await html2canvas(element, {
+      scale: 3,                // Higher = sharper
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: "#ffffff",
+      scrollY: -window.scrollY
+    });
+
+    const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pageWidth = 210;
+    const pageHeight = 297;
+
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+    let pageNumber = 1;
+
+    // First Page
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight, undefined, "FAST");
+    addHeader(pdf, pageNumber);
+    heightLeft -= pageHeight;
+
+    // Additional Pages
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight, undefined, "FAST");
+      pageNumber++;
+      addHeader(pdf, pageNumber);
+      heightLeft -= pageHeight;
+    }
+
+    pdf.save("BFS_Safety_Stand_Down.pdf");
+
+  });
+
+});
+
+function addHeader(pdf, pageNumber) {
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  // Header Background
+  pdf.setFillColor(200, 16, 46); // BFS Red
+  pdf.rect(0, 0, pageWidth, 12, "F");
+
+  // Header Text
+  pdf.setFontSize(10);
+  pdf.setTextColor(255,255,255);
+  pdf.text("Builders FirstSource | Safety Stand-Down", 10, 8);
+
+  // Page Number
+  pdf.setTextColor(0,0,0);
+  pdf.setFontSize(9);
+  pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 8);
+
+}
+</script>
 
 </body>
 </html>
