@@ -534,20 +534,21 @@ document.getElementById("photoUpload").addEventListener("change", function(e){
 /* =====================================
    PDF
 ===================================== */
-
+<script>
 document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
   const { jsPDF } = window.jspdf;
   const element = document.getElementById("pdfContent");
 
-  const canvas = await html2canvas(element,{
-    scale:2,
-    useCORS:true,
-    scrollY:-window.scrollY
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff",
+    scrollY: -window.scrollY
   });
 
-  const imgData = canvas.toDataURL("image/jpeg",1);
-  const pdf = new jsPDF("p","mm","a4");
+  const imgData = canvas.toDataURL("image/jpeg", 1.0);
+  const pdf = new jsPDF("p", "mm", "a4");
 
   const pageWidth = 210;
   const pageHeight = 297;
@@ -555,29 +556,30 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   const imgWidth = pageWidth;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  let heightLeft = imgHeight;
   let position = 0;
+  let remainingHeight = imgHeight;
 
-  pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
-  heightLeft -= pageHeight;
+  while (remainingHeight > 0) {
 
-  while(heightLeft > 0){
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
-    heightLeft -= pageHeight;
+    pdf.addImage(
+      imgData,
+      "JPEG",
+      0,
+      position,
+      imgWidth,
+      imgHeight
+    );
+
+    remainingHeight -= pageHeight;
+
+    if (remainingHeight > 0) {
+      pdf.addPage();
+      position -= pageHeight;
+    }
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
-});
 
-/* =====================================
-   INIT AFTER LOAD
-===================================== */
-
-window.addEventListener("load", function(){
-  initInitialPads();
-  initSignatures();
 });
 </script>
 
