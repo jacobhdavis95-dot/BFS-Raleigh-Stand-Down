@@ -351,81 +351,71 @@ canvas{
     <li>An incident report must be submitted within 24 hours.</li></ul>
 
 <!-- ============================= -->
-<!-- ATTENDEE INITIALS SECTION -->
+<!-- ============================= -->
+<!-- ATTENDEE INITIALS -->
 <!-- ============================= -->
 <div class="section">
   <div class="section-title">Stand-Down Attendee Initials</div>
-  <p style="margin-bottom:15px;">Each attendee must initial below.</p>
+  <p>Each attendee must initial below.</p>
 
-  <div class="initial-grid">
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(0)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(1)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(2)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(3)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(4)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(5)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(6)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(7)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(8)">Clear</button></div>
-    <div class="initial-box"><canvas class="initialPad"></canvas><button type="button" onclick="clearInitial(9)">Clear</button></div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;">
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
+    <canvas class="initialPad"></canvas>
   </div>
 </div>
 
 <!-- ============================= -->
-<!-- SIGNATURE SECTION -->
+<!-- SIGNATURES -->
 <!-- ============================= -->
 <div class="section">
   <div class="section-title">BFS Representative Signature</div>
   <canvas id="bfsSignature"></canvas>
-  <button type="button" onclick="clearCanvas('bfsSignature')">Clear Signature</button>
 </div>
 
 <div class="section">
   <div class="section-title">Subcontractor Representative Signature</div>
   <canvas id="subSignature"></canvas>
-  <button type="button" onclick="clearCanvas('subSignature')">Clear Signature</button>
 </div>
 
 <!-- ============================= -->
-<!-- PHOTO UPLOAD SECTION -->
+<!-- PHOTO UPLOAD -->
 <!-- ============================= -->
 <div class="section">
   <div class="section-title">Jobsite Photos</div>
-
   <input type="file" id="photoUpload" accept="image/*" multiple>
   <div id="photoPreview" style="margin-top:15px;"></div>
 </div>
 
-</div> <!-- CLOSES .container -->
+</div> <!-- CLOSES pdfContent -->
 
 <button id="savePdfBtn">Save Safety Stand Down (PDF)</button>
 
-<!-- ============================= -->
-<!-- LIBRARIES -->
-<!-- ============================= -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-/* =====================================
-   CANVAS DRAW SYSTEM (Reusable)
-===================================== */
+/* ================================
+   UNIVERSAL CANVAS DRAW ENGINE
+================================ */
 
-function enableDrawing(canvas){
-
+function enableCanvas(canvas){
   const ctx = canvas.getContext("2d");
 
   function resize(){
     const ratio = window.devicePixelRatio || 1;
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
-
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
-
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
     ctx.setTransform(1,0,0,1,0,0);
     ctx.scale(ratio, ratio);
-
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#000";
@@ -472,68 +462,24 @@ function enableDrawing(canvas){
   canvas.addEventListener("touchend",stop);
 }
 
-/* =====================================
-   INITIAL PADS
-===================================== */
+/* ================================
+   INITIALIZE PADS
+================================ */
 
-function initInitialPads(){
-  document.querySelectorAll(".initialPad").forEach((canvas)=>{
-    enableDrawing(canvas);
+window.addEventListener("load", function(){
+
+  document.querySelectorAll(".initialPad").forEach(canvas=>{
+    enableCanvas(canvas);
   });
-}
 
-function clearInitial(index){
-  const pads = document.querySelectorAll(".initialPad");
-  const canvas = pads[index];
-  const ctx = canvas.getContext("2d");
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-/* =====================================
-   SIGNATURES
-===================================== */
-
-function initSignatures(){
-  enableDrawing(document.getElementById("bfsSignature"));
-  enableDrawing(document.getElementById("subSignature"));
-}
-
-function clearCanvas(id){
-  const canvas = document.getElementById(id);
-  const ctx = canvas.getContext("2d");
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-/* =====================================
-   PHOTO UPLOAD
-===================================== */
-
-document.getElementById("photoUpload").addEventListener("change", function(e){
-
-  const preview = document.getElementById("photoPreview");
-  preview.innerHTML = "";
-
-  Array.from(e.target.files).forEach(file=>{
-
-    const reader = new FileReader();
-
-    reader.onload = function(evt){
-      const img = document.createElement("img");
-      img.src = evt.target.result;
-      img.style.width = "100%";
-      img.style.marginBottom = "10px";
-      img.style.borderRadius = "8px";
-      preview.appendChild(img);
-    };
-
-    reader.readAsDataURL(file);
-  });
+  enableCanvas(document.getElementById("bfsSignature"));
+  enableCanvas(document.getElementById("subSignature"));
 
 });
 
-/* =====================================
-   PDF
-===================================== */
+/* ================================
+   PHOTO PREVIEW
+================================ */
 <script>
 document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
@@ -548,40 +494,107 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   });
 
   const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
   const pdf = new jsPDF("p", "mm", "a4");
 
   const pageWidth = 210;
   const pageHeight = 297;
 
+  const headerHeight = 18;   // Space reserved for header
+  const footerHeight = 12;   // Space for page number
+  const usablePageHeight = pageHeight - headerHeight - footerHeight;
+
   const imgWidth = pageWidth;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
+  let heightLeft = imgHeight;
   let position = 0;
-  let remainingHeight = imgHeight;
+  let pageNumber = 1;
 
-  while (remainingHeight > 0) {
+  while (heightLeft > 0) {
 
+    // Add page image slice
     pdf.addImage(
       imgData,
       "JPEG",
       0,
-      position,
+      headerHeight + position,
       imgWidth,
       imgHeight
     );
 
-    remainingHeight -= pageHeight;
+    // Add header
+    addBFSHeader(pdf, pageWidth);
 
-    if (remainingHeight > 0) {
+    // Add footer page number
+    pdf.setFontSize(9);
+    pdf.setTextColor(0,0,0);
+    pdf.text(
+      "Page " + pageNumber,
+      pageWidth - 25,
+      pageHeight - 5
+    );
+
+    heightLeft -= usablePageHeight;
+
+    if (heightLeft > 0) {
       pdf.addPage();
-      position -= pageHeight;
+      position -= usablePageHeight;
+      pageNumber++;
     }
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
 
 });
+
+
+function addBFSHeader(pdf, pageWidth) {
+
+  // Red header bar
+  pdf.setFillColor(200,16,46);
+  pdf.rect(0, 0, pageWidth, 12, "F");
+
+  // Header text
+  pdf.setFontSize(11);
+  pdf.setTextColor(255,255,255);
+  pdf.text(
+    "Builders FirstSource | Safety Stand-Down",
+    10,
+    8
+  );
+
+  // Thin divider line
+  pdf.setDrawColor(200,16,46);
+  pdf.setLineWidth(0.5);
+  pdf.line(0, 14, pageWidth, 14);
+
+}
 </script>
+document.getElementById("photoUpload").addEventListener("change", function(e){
+  const preview = document.getElementById("photoPreview");
+  preview.innerHTML = "";
+
+  Array.from(e.target.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(evt){
+      const img = document.createElement("img");
+      img.src = evt.target.result;
+      img.style.width = "100%";
+      img.style.marginBottom = "10px";
+      img.style.borderRadius = "8px";
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+/* ================================
+   PDF SAVE
+================================ */
+.section {
+  page-break-inside: avoid;
+}
 
 </body>
 </html>
