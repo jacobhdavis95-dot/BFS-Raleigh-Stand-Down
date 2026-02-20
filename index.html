@@ -552,7 +552,15 @@ window.addEventListener("load", () => {
    PDF SAVE
 =============================== */
 
+<script>
 document.getElementById("savePdfBtn").addEventListener("click", async () => {
+
+  // 🔹 Hide all Clear buttons
+  document.querySelectorAll("button").forEach(btn=>{
+    if(btn.innerText === "Clear" || btn.innerText === "Clear Signature"){
+      btn.style.display = "none";
+    }
+  });
 
   const { jsPDF } = window.jspdf;
   const element = document.getElementById("pdfContent");
@@ -579,6 +587,7 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
     pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
 
+    // BFS Header
     pdf.setFillColor(200,16,46);
     pdf.rect(0,0,pageWidth,12,"F");
 
@@ -586,6 +595,7 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
     pdf.setFontSize(10);
     pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
 
+    // Page number
     pdf.setTextColor(0,0,0);
     pdf.text("Page " + pageNumber, pageWidth-25, pageHeight-5);
 
@@ -599,6 +609,9 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
+
+});
+</script>
 
 });
 
