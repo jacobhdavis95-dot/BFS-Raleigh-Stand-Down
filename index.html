@@ -372,7 +372,6 @@ canvas{
   <script>
 function enableSignature(canvasId) {
 
-  const canvas = document.getElementById(canvasId);
   const ctx = canvas.getContext("2d");
 
   function resizeCanvas() {
@@ -511,8 +510,6 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   pdf.save("BFS_Safety_Stand_Down.pdf");
 });
 </script>
-
- <script>
 
 </script>
  
@@ -821,7 +818,6 @@ window.addEventListener("load", function(){
   });
 
 });
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
