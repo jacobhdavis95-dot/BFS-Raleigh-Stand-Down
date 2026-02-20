@@ -553,22 +553,72 @@ window.addEventListener("load", () => {
 =============================== */
 
 <script>
-document.getElementById("savePdfBtn").addEventListener("click", async () => {
+<script>
 
-  // 🔹 Hide all Clear buttons
+document.getElementById("savePdfBtn").addEventListener("click", async function() {
+
+  const saveBtn = document.getElementById("savePdfBtn");
+
+  // 🔹 Remove ALL clear buttons permanently
   document.querySelectorAll("button").forEach(btn=>{
-    if(btn.innerText === "Clear" || btn.innerText === "Clear Signature"){
-      btn.style.display = "none";
+    if(btn.innerText.trim() === "Clear" || btn.innerText.trim() === "Clear Signature"){
+      btn.remove();
     }
   });
 
   const { jsPDF } = window.jspdf;
   const element = document.getElementById("pdfContent");
 
-  const canvas = await html2canvas(element,{
-    scale:2,
-    backgroundColor:"#ffffff"
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    backgroundColor: "#ffffff",
+    scrollY: -window.scrollY
   });
+
+  const imgData = canvas.toDataURL("image/jpeg", 1);
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const pageWidth = 210;
+  const pageHeight = 297;
+
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+  let pageNumber = 1;
+
+  while (heightLeft > 0) {
+
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+
+    // 🔴 BFS HEADER
+    pdf.setFillColor(200,16,46);
+    pdf.rect(0,0,pageWidth,12,"F");
+
+    pdf.setTextColor(255,255,255);
+    pdf.setFontSize(10);
+    pdf.text("Builders FirstSource | Safety Stand-Down", 10, 8);
+
+    // 🔢 Page Number
+    pdf.setTextColor(0,0,0);
+    pdf.setFontSize(9);
+    pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
+
+    heightLeft -= pageHeight;
+
+    if (heightLeft > 0) {
+      pdf.addPage();
+      position -= pageHeight;
+      pageNumber++;
+    }
+  }
+
+  pdf.save("BFS_Safety_Stand_Down.pdf");
+
+});
+
+</script>
 
   const imgData = canvas.toDataURL("image/jpeg",1);
   const pdf = new jsPDF("p","mm","a4");
