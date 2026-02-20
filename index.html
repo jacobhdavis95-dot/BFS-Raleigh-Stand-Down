@@ -456,93 +456,84 @@ document.getElementById("photoUpload").addEventListener("change",function(e){
 });
 
 /* PDF */
+/* ===============================
+   CLEAN PDF EXPORT WITH LIVE HEADER
+=============================== */
 
-document.getElementById("savePdfBtn").addEventListener("click",async()=>{
+document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
-  document.querySelectorAll(".btn-secondary").forEach(b=>b.remove());
+  // Remove clear buttons before export
+  document.querySelectorAll(".btn-secondary").forEach(b => b.remove());
 
   const { jsPDF } = window.jspdf;
-  const element=document.getElementById("pdfContent");
 
-  const canvas=await html2canvas(element,{scale:2});
-  const imgData=canvas.toDataURL("image/jpeg",1);
-  const pdf=new jsPDF("p","mm","a4");
+  const content = document.getElementById("pdfContent");
+  const headerElement = document.querySelector(".topbar");
+  const subbarElement = document.querySelector(".subbar");
 
-  const pageWidth=210;
-  const pageHeight=297;
+  // Capture header as image
+  const headerCanvas = await html2canvas(headerElement, { scale: 2 });
+  const subbarCanvas = await html2canvas(subbarElement, { scale: 2 });
 
-  const imgWidth=pageWidth;
-  const imgHeight=(canvas.height*imgWidth)/canvas.width;
+  const headerImg = headerCanvas.toDataURL("image/png");
+  const subbarImg = subbarCanvas.toDataURL("image/png");
 
-  let heightLeft=imgHeight;
-  let position=0;
-  let pageNumber=1;
+  // Capture content
+  const contentCanvas = await html2canvas(content, {
+    scale: 2,
+    backgroundColor: "#ffffff",
+    scrollY: -window.scrollY
+  });
 
-  while(heightLeft>0){
-const { jsPDF } = window.jspdf;
-const element = document.getElementById("pdfContent");
+  const contentImg = contentCanvas.toDataURL("image/jpeg", 1.0);
 
-const canvas = await html2canvas(element, {
-  scale: 2,
-  backgroundColor: "#ffffff",
-  scrollY: -window.scrollY
-});
+  const pdf = new jsPDF("p", "mm", "a4");
 
-const imgData = canvas.toDataURL("image/jpeg", 1.0);
-const pdf = new jsPDF("p", "mm", "a4");
+  const pageWidth = 210;
+  const pageHeight = 297;
 
-const pageWidth = 210;
-const pageHeight = 297;
+  const headerHeight = 20; // space for header
+  const usableHeight = pageHeight - headerHeight - 10;
 
-const headerHeight = 15;
-const footerHeight = 10;
-const usableHeight = pageHeight - headerHeight - footerHeight;
+  const imgWidth = pageWidth;
+  const imgHeight = (contentCanvas.height * imgWidth) / contentCanvas.width;
 
-const imgWidth = pageWidth;
-const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  let heightLeft = imgHeight;
+  let position = 0;
+  let pageNumber = 1;
 
-let heightLeft = imgHeight;
-let position = 0;
-let pageNumber = 1;
+  while (heightLeft > 0) {
 
-while (heightLeft > 0) {
+    // Add live header image
+    pdf.addImage(headerImg, "PNG", 0, 0, pageWidth, 14);
+    pdf.addImage(subbarImg, "PNG", 0, 14, pageWidth, 6);
 
-  pdf.addImage(
-    imgData,
-    "JPEG",
-    0,
-    headerHeight + position,
-    imgWidth,
-    imgHeight
-  );
+    // Add content slice
+    pdf.addImage(
+      contentImg,
+      "JPEG",
+      0,
+      headerHeight + position,
+      imgWidth,
+      imgHeight
+    );
 
-  // BFS Header
-  pdf.setFillColor(200,16,46);
-  pdf.rect(0,0,pageWidth,12,"F");
+    // Page number
+    pdf.setFontSize(9);
+    pdf.setTextColor(0,0,0);
+    pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
 
-  pdf.setTextColor(255,255,255);
-  pdf.setFontSize(10);
-  pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
+    heightLeft -= usableHeight;
 
-  // Page Number
-  pdf.setTextColor(0,0,0);
-  pdf.setFontSize(9);
-  pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
-
-  heightLeft -= usableHeight;
-
-  if (heightLeft > 0) {
-    pdf.addPage();
-    position -= usableHeight;
-    pageNumber++;
-  }
-}
-
-pdf.save("BFS_Safety_Stand_Down.pdf");
+    if (heightLeft > 0) {
+      pdf.addPage();
+      position -= usableHeight;
+      pageNumber++;
     }
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
+
 });
 
 </script>
