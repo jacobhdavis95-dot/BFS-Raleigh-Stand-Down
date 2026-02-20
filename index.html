@@ -589,21 +589,42 @@ function clearInitial(index){
 
   <div id="photoPreview"></div>
 </div>
+
+<!-- CLOSE CONTAINER -->
+</div> <!-- CLOSES .container -->
+
+<button id="savePdfBtn">
+  Save Safety Stand Down (PDF)
+</button>
+
+<!-- LIBRARIES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
+/* ============================
+   PHOTO PREVIEW
+============================ */
+
 let compressedImages = [];
 
 document.getElementById('photoUpload').addEventListener('change', function(event){
+
   const preview = document.getElementById('photoPreview');
   preview.innerHTML = '';
   compressedImages = [];
 
-  Array.from(event.target.files).forEach(file=>{
+  Array.from(event.target.files).forEach(file => {
+
     const reader = new FileReader();
+
     reader.onload = function(e){
+
       const img = new Image();
       img.src = e.target.result;
 
       img.onload = function(){
+
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
@@ -615,217 +636,157 @@ document.getElementById('photoUpload').addEventListener('change', function(event
 
         ctx.drawImage(img,0,0,canvas.width,canvas.height);
 
-        const compressed = canvas.toDataURL("image/jpeg",0.6);
+        const compressed = canvas.toDataURL("image/jpeg",0.8);
         compressedImages.push(compressed);
 
         const previewImg = document.createElement('img');
         previewImg.src = compressed;
-        previewImg.style.width='100%';
-        previewImg.style.marginTop='10px';
+        previewImg.style.width = "100%";
+        previewImg.style.marginTop = "10px";
+
         preview.appendChild(previewImg);
       };
     };
+
     reader.readAsDataURL(file);
   });
+
 });
-</script>
-  const canvas = document.getElementById(canvasId);
-  const ctx = canvas.getContext("2d");
 
-  function resizeCanvas() {
-    const ratio = window.devicePixelRatio || 1;
 
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
+/* ============================
+   INITIAL PADS
+============================ */
 
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
+function enableInitialPads(){
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(ratio, ratio);
+  const pads = document.querySelectorAll(".initialPad");
 
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#000";
-  }
+  pads.forEach((canvas, index) => {
 
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
+    const ctx = canvas.getContext("2d");
 
-  let drawing = false;
+    function resizeCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
 
-  function getPosition(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.clientX || e.touches[0].clientX;
-    const clientY = e.clientY || e.touches[0].clientY;
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  }
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
 
-  function startDraw(e) {
-    drawing = true;
-    const pos = getPosition(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-  }
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(ratio, ratio);
 
-  function draw(e) {
-    if (!drawing) return;
-    e.preventDefault();
-    const pos = getPosition(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-  }
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+    }
 
-  function stopDraw() {
-    drawing = false;
-  }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-  canvas.addEventListener("mousedown", startDraw);
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("mouseup", stopDraw);
-  canvas.addEventListener("mouseleave", stopDraw);
+    let drawing = false;
 
-  canvas.addEventListener("touchstart", startDraw);
-  canvas.addEventListener("touchmove", draw);
-  canvas.addEventListener("touchend", stopDraw);
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function start(e){
+      drawing = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x,pos.y);
+    }
+
+    function draw(e){
+      if(!drawing) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      ctx.lineTo(pos.x,pos.y);
+      ctx.stroke();
+    }
+
+    function stop(){
+      drawing = false;
+    }
+
+    canvas.addEventListener("mousedown",start);
+    canvas.addEventListener("mousemove",draw);
+    canvas.addEventListener("mouseup",stop);
+    canvas.addEventListener("mouseleave",stop);
+
+    canvas.addEventListener("touchstart",start,{passive:false});
+    canvas.addEventListener("touchmove",draw,{passive:false});
+    canvas.addEventListener("touchend",stop);
+  });
 }
 
-function clearCanvas(id){
-  const canvas = document.getElementById(id);
+function clearInitial(index){
+  const pads = document.querySelectorAll(".initialPad");
+  const canvas = pads[index];
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
+
+
+/* ============================
+   PDF GENERATOR
+============================ */
+
+document.getElementById("savePdfBtn").addEventListener("click", async () => {
+
+  const { jsPDF } = window.jspdf;
+  const element = document.querySelector("#pdfContent");
+
+  const canvas = await html2canvas(element,{
+    scale:2,
+    useCORS:true,
+    scrollY:-window.scrollY
+  });
+
+  const imgData = canvas.toDataURL("image/jpeg",1.0);
+  const pdf = new jsPDF("p","mm","a4");
+
+  const pageWidth = 210;
+  const pageHeight = 297;
+
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
+  heightLeft -= pageHeight;
+
+  while(heightLeft > 0){
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
+    heightLeft -= pageHeight;
+  }
+
+  pdf.save("BFS_Safety_Stand_Down.pdf");
+
+});
+
+
+/* ============================
+   INITIALIZE AFTER LOAD
+============================ */
+
+window.addEventListener("load", function(){
+  enableInitialPads();
+});
+
 </script>
-    </body>
-
-<!-- BFS REPRESENTATIVE SIGNATURE -->
-<div class="section">
-</div> <!-- CLOSES .container -->
-
-<button id="savePdfBtn">
-  Save Safety Stand Down (PDF)
-</button>
-
-<script>
-window.addEventListener("load", function(){
-
-  document.getElementById("savePdfBtn").addEventListener("click", async () => {
-
-    const { jsPDF } = window.jspdf;
-    const element = document.querySelector(".container");
-
-    // Higher scale = sharper + prevents text cut off
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      scrollY: -window.scrollY
-    });
-
-    const imgData = canvas.toDataURL("image/jpeg", 1.0);
-
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const pageWidth = 210; // A4 width in mm
-    const pageHeight = 297; // A4 height in mm
-
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-    }
-
-    pdf.save("BFS_Safety_Stand_Down.pdf");
-
-  });
-
-});
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-window.addEventListener("load", function(){
-
-  document.getElementById("savePdfBtn").addEventListener("click", async () => {
-
-    const { jsPDF } = window.jspdf;
-
-    const canvas = await html2canvas(element, {
-      scale: 3,                // Higher = sharper
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#ffffff",
-      scrollY: -window.scrollY
-    });
-
-    const imgData = canvas.toDataURL("image/jpeg", 1.0);
-
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const pageWidth = 210;
-    const pageHeight = 297;
-
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-    let pageNumber = 1;
-
-    // First Page
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight, undefined, "FAST");
-    addHeader(pdf, pageNumber);
-    heightLeft -= pageHeight;
-
-    // Additional Pages
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight, undefined, "FAST");
-      pageNumber++;
-      addHeader(pdf, pageNumber);
-      heightLeft -= pageHeight;
-    }
-
-    pdf.save("BFS_Safety_Stand_Down.pdf");
-    
-  });
-
-});
-
-function addHeader(pdf, pageNumber) {
-
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
-
-  // Header Background
-  pdf.setFillColor(200, 16, 46); // BFS Red
-  pdf.rect(0, 0, pageWidth, 12, "F");
-
-  // Header Text
-  pdf.setFontSize(10);
-  pdf.setTextColor(255,255,255);
-  pdf.text("Builders FirstSource | Safety Stand-Down", 10, 8);
-
-  // Page Number
-  pdf.setTextColor(0,0,0);
-  pdf.setFontSize(9);
-  pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 8);
-
-}
-<script>
 
 </body>
 </html>
-
