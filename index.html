@@ -8,7 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* =========================
+   PAGE BREAK CONTROL
+========================= */
 
+.card,
+.section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+h2, h3 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+ul, ol, p {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
 body{
   font-family:'Inter',sans-serif;
   margin:0;
@@ -461,25 +479,66 @@ document.getElementById("savePdfBtn").addEventListener("click",async()=>{
   let pageNumber=1;
 
   while(heightLeft>0){
+const { jsPDF } = window.jspdf;
+const element = document.getElementById("pdfContent");
 
-    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
+const canvas = await html2canvas(element, {
+  scale: 2,
+  backgroundColor: "#ffffff",
+  scrollY: -window.scrollY
+});
 
-    pdf.setFillColor(200,16,46);
-    pdf.rect(0,0,pageWidth,12,"F");
+const imgData = canvas.toDataURL("image/jpeg", 1.0);
+const pdf = new jsPDF("p", "mm", "a4");
 
-    pdf.setTextColor(255,255,255);
-    pdf.setFontSize(10);
-    pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
+const pageWidth = 210;
+const pageHeight = 297;
 
-    pdf.setTextColor(0,0,0);
-    pdf.text("Page "+pageNumber,pageWidth-25,pageHeight-5);
+const headerHeight = 15;
+const footerHeight = 10;
+const usableHeight = pageHeight - headerHeight - footerHeight;
 
-    heightLeft-=pageHeight;
+const imgWidth = pageWidth;
+const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    if(heightLeft>0){
-      pdf.addPage();
-      position-=pageHeight;
-      pageNumber++;
+let heightLeft = imgHeight;
+let position = 0;
+let pageNumber = 1;
+
+while (heightLeft > 0) {
+
+  pdf.addImage(
+    imgData,
+    "JPEG",
+    0,
+    headerHeight + position,
+    imgWidth,
+    imgHeight
+  );
+
+  // BFS Header
+  pdf.setFillColor(200,16,46);
+  pdf.rect(0,0,pageWidth,12,"F");
+
+  pdf.setTextColor(255,255,255);
+  pdf.setFontSize(10);
+  pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
+
+  // Page Number
+  pdf.setTextColor(0,0,0);
+  pdf.setFontSize(9);
+  pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
+
+  heightLeft -= usableHeight;
+
+  if (heightLeft > 0) {
+    pdf.addPage();
+    position -= usableHeight;
+    pageNumber++;
+  }
+}
+
+pdf.save("BFS_Safety_Stand_Down.pdf");
     }
   }
 
