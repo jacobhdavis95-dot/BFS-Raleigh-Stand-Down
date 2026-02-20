@@ -349,8 +349,7 @@ canvas{
     <li>Injured employees must receive medical attention immediately when required.</li>
     <li>BFS Management must be notified immediately by phone.</li>
     <li>An incident report must be submitted within 24 hours.</li></ul>
-<!DOCTYPE html>
-<html lang="en">
+
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -555,6 +554,16 @@ window.addEventListener("load", () => {
 document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
   const { jsPDF } = window.jspdf;
+  <!-- ============================= -->
+<!-- PHOTO UPLOAD SECTION -->
+<!-- ============================= -->
+<div class="section">
+  <div class="section-title">Jobsite Photos</div>
+
+  <input type="file" id="photoUpload" accept="image/*" multiple>
+
+  <div id="photoPreview" style="margin-top:15px;"></div>
+</div>
   const element = document.getElementById("pdfContent");
 
   const canvas = await html2canvas(element,{
@@ -601,9 +610,31 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   pdf.save("BFS_Safety_Stand_Down.pdf");
 
 });
+<script>
+document.getElementById("photoUpload").addEventListener("change", function(e){
 
+  const preview = document.getElementById("photoPreview");
+  preview.innerHTML = "";
+
+  Array.from(e.target.files).forEach(file => {
+
+    const reader = new FileReader();
+
+    reader.onload = function(evt){
+      const img = document.createElement("img");
+      img.src = evt.target.result;
+      img.style.width = "100%";
+      img.style.marginBottom = "10px";
+      img.style.borderRadius = "8px";
+      preview.appendChild(img);
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+});
 </script>
-
+</script>
 </body>
 </html>
 
