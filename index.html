@@ -349,62 +349,129 @@ canvas{
     <li>Injured employees must receive medical attention immediately when required.</li>
     <li>BFS Management must be notified immediately by phone.</li>
     <li>An incident report must be submitted within 24 hours.</li></ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BFS | Safety Stand-Down</title>
 
-<!-- ============================= -->
-<!-- ============================= -->
-<!-- ATTENDEE INITIALS -->
-<!-- ============================= -->
+<style>
+body{
+  font-family:Arial, sans-serif;
+  margin:0;
+  background:#f4f6f8;
+  color:#1F2A44;
+}
+header{
+  background:#C8102E;
+  color:#fff;
+  padding:14px;
+  text-align:center;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.section{
+  background:#fff;
+  border:2px solid #C8102E;
+  border-radius:10px;
+  padding:18px;
+  margin-bottom:20px;
+}
+.section-title{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:10px;
+  color:#C8102E;
+}
+button{
+  padding:10px;
+  margin-top:10px;
+  background:#C8102E;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+canvas{
+  width:100%;
+  height:120px;
+  border:2px solid #C8102E;
+  border-radius:8px;
+  touch-action:none;
+}
+.initial-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Builders FirstSource</h1>
+  Safety Stand-Down
+</header>
+
+<div class="container" id="pdfContent">
+
 <div class="section">
   <div class="section-title">Stand-Down Attendee Initials</div>
-  <p>Each attendee must initial below.</p>
-
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;">
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-    <canvas class="initialPad"></canvas>
-  </div>
+  <div class="initial-grid" id="initialContainer"></div>
 </div>
 
-<!-- ============================= -->
-<!-- SIGNATURES -->
-<!-- ============================= -->
 <div class="section">
   <div class="section-title">BFS Representative Signature</div>
   <canvas id="bfsSignature"></canvas>
+  <button onclick="clearCanvas('bfsSignature')">Clear Signature</button>
 </div>
 
 <div class="section">
   <div class="section-title">Subcontractor Representative Signature</div>
   <canvas id="subSignature"></canvas>
+  <button onclick="clearCanvas('subSignature')">Clear Signature</button>
 </div>
 
-<!-- ============================= -->
-<!-- PHOTO UPLOAD -->
-<!-- ============================= -->
-<div class="section">
-  <div class="section-title">Jobsite Photos</div>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div id="photoPreview" style="margin-top:15px;"></div>
 </div>
 
-</div> <!-- CLOSES pdfContent -->
-
-<button id="savePdfBtn">Save Safety Stand Down (PDF)</button>
+<button id="savePdfBtn" style="width:100%;margin:20px;">
+Save Safety Stand Down (PDF)
+</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-/* ================================
-   UNIVERSAL CANVAS DRAW ENGINE
-================================ */
+
+/* ===============================
+   CREATE INITIAL PADS
+=============================== */
+
+const initialContainer = document.getElementById("initialContainer");
+
+for(let i=0;i<10;i++){
+  const wrapper = document.createElement("div");
+
+  const canvas = document.createElement("canvas");
+  canvas.classList.add("initialPad");
+
+  const btn = document.createElement("button");
+  btn.innerText = "Clear";
+  btn.onclick = () => clearSpecificCanvas(canvas);
+
+  wrapper.appendChild(canvas);
+  wrapper.appendChild(btn);
+  initialContainer.appendChild(wrapper);
+}
+
+/* ===============================
+   DRAWING ENGINE
+=============================== */
 
 function enableCanvas(canvas){
   const ctx = canvas.getContext("2d");
@@ -448,9 +515,7 @@ function enableCanvas(canvas){
     ctx.stroke();
   }
 
-  function stop(){
-    drawing = false;
-  }
+  function stop(){ drawing = false; }
 
   canvas.addEventListener("mousedown",start);
   canvas.addEventListener("mousemove",draw);
@@ -462,47 +527,46 @@ function enableCanvas(canvas){
   canvas.addEventListener("touchend",stop);
 }
 
-/* ================================
-   INITIALIZE PADS
-================================ */
+function clearCanvas(id){
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
 
-window.addEventListener("load", function(){
+function clearSpecificCanvas(canvas){
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
 
-  document.querySelectorAll(".initialPad").forEach(canvas=>{
+/* ===============================
+   INIT ALL CANVASES
+=============================== */
+
+window.addEventListener("load", () => {
+  document.querySelectorAll("canvas").forEach(canvas=>{
     enableCanvas(canvas);
   });
-
-  enableCanvas(document.getElementById("bfsSignature"));
-  enableCanvas(document.getElementById("subSignature"));
-
 });
 
-/* ================================
-   PHOTO PREVIEW
-================================ */
-<script>
+/* ===============================
+   PDF SAVE
+=============================== */
+
 document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
   const { jsPDF } = window.jspdf;
   const element = document.getElementById("pdfContent");
 
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: "#ffffff",
-    scrollY: -window.scrollY
+  const canvas = await html2canvas(element,{
+    scale:2,
+    backgroundColor:"#ffffff"
   });
 
-  const imgData = canvas.toDataURL("image/jpeg", 1.0);
-
-  const pdf = new jsPDF("p", "mm", "a4");
+  const imgData = canvas.toDataURL("image/jpeg",1);
+  const pdf = new jsPDF("p","mm","a4");
 
   const pageWidth = 210;
   const pageHeight = 297;
-
-  const headerHeight = 18;   // Space reserved for header
-  const footerHeight = 12;   // Space for page number
-  const usablePageHeight = pageHeight - headerHeight - footerHeight;
 
   const imgWidth = pageWidth;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -511,35 +575,25 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
   let position = 0;
   let pageNumber = 1;
 
-  while (heightLeft > 0) {
+  while(heightLeft > 0){
 
-    // Add page image slice
-    pdf.addImage(
-      imgData,
-      "JPEG",
-      0,
-      headerHeight + position,
-      imgWidth,
-      imgHeight
-    );
+    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
 
-    // Add header
-    addBFSHeader(pdf, pageWidth);
+    pdf.setFillColor(200,16,46);
+    pdf.rect(0,0,pageWidth,12,"F");
 
-    // Add footer page number
-    pdf.setFontSize(9);
+    pdf.setTextColor(255,255,255);
+    pdf.setFontSize(10);
+    pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
+
     pdf.setTextColor(0,0,0);
-    pdf.text(
-      "Page " + pageNumber,
-      pageWidth - 25,
-      pageHeight - 5
-    );
+    pdf.text("Page " + pageNumber, pageWidth-25, pageHeight-5);
 
-    heightLeft -= usablePageHeight;
+    heightLeft -= pageHeight;
 
-    if (heightLeft > 0) {
+    if(heightLeft > 0){
       pdf.addPage();
-      position -= usablePageHeight;
+      position -= pageHeight;
       pageNumber++;
     }
   }
@@ -548,53 +602,7 @@ document.getElementById("savePdfBtn").addEventListener("click", async () => {
 
 });
 
-
-function addBFSHeader(pdf, pageWidth) {
-
-  // Red header bar
-  pdf.setFillColor(200,16,46);
-  pdf.rect(0, 0, pageWidth, 12, "F");
-
-  // Header text
-  pdf.setFontSize(11);
-  pdf.setTextColor(255,255,255);
-  pdf.text(
-    "Builders FirstSource | Safety Stand-Down",
-    10,
-    8
-  );
-
-  // Thin divider line
-  pdf.setDrawColor(200,16,46);
-  pdf.setLineWidth(0.5);
-  pdf.line(0, 14, pageWidth, 14);
-
-}
 </script>
-document.getElementById("photoUpload").addEventListener("change", function(e){
-  const preview = document.getElementById("photoPreview");
-  preview.innerHTML = "";
-
-  Array.from(e.target.files).forEach(file=>{
-    const reader = new FileReader();
-    reader.onload = function(evt){
-      const img = document.createElement("img");
-      img.src = evt.target.result;
-      img.style.width = "100%";
-      img.style.marginBottom = "10px";
-      img.style.borderRadius = "8px";
-      preview.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
-/* ================================
-   PDF SAVE
-================================ */
-.section {
-  page-break-inside: avoid;
-}
 
 </body>
 </html>
