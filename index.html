@@ -113,9 +113,10 @@ textarea{
 /* Signature */
 canvas{
   width:100%;
-  height:120px;
+  height:150px;
   border:2px solid #C8102E;
   border-radius:8px;
+  background:#fff;
   touch-action:none;
 }
 
@@ -642,11 +643,8 @@ button{
     </div>
   </div>
 
-  <label>BFS Representative Signature</label>
   <canvas id="bfsSignature"></canvas>
-
-  <label>Subcontractor Representative Signature</label>
-  <canvas id="subSignature"></canvas>
+<canvas id="subSignature"></canvas>
 
   <div class="footer">
     <div>OUTPERFORM TODAY. TRANSFORM TOMORROW.</div>
@@ -722,45 +720,90 @@ button{
 
 <script>
 
-/* SIGNATURE ENGINE */
-function enableSignature(canvas){
-  const ctx = canvas.getContext("2d");
-  const ratio = window.devicePixelRatio || 1;
+<script>
 
-  function resize(){
+/* ===== BULLETPROOF SIGNATURE ENGINE ===== */
+
+function setupSignature(canvasId){
+
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas(){
+    const ratio = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
+
     canvas.width = rect.width * ratio;
     canvas.height = rect.height * ratio;
+
+    ctx.setTransform(1,0,0,1,0,0);
     ctx.scale(ratio, ratio);
+
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
   }
 
-  resize();
-  window.addEventListener("resize", resize);
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
 
   let drawing = false;
 
-  canvas.addEventListener("mousedown", e=>{
-    drawing = true;
-    ctx.beginPath();
-  });
-
-  canvas.addEventListener("mousemove", e=>{
-    if(!drawing) return;
+  function getPos(e){
     const rect = canvas.getBoundingClientRect();
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
-  });
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
 
-  canvas.addEventListener("mouseup", ()=> drawing = false);
-  canvas.addEventListener("mouseleave", ()=> drawing = false);
+    return {
+      x: x - rect.left,
+      y: y - rect.top
+    };
+  }
+
+  function start(e){
+    drawing = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }
+
+  function move(e){
+    if(!drawing) return;
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }
+
+  function end(){
+    drawing = false;
+  }
+
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("mousemove", move);
+  canvas.addEventListener("mouseup", end);
+  canvas.addEventListener("mouseleave", end);
+
+  canvas.addEventListener("touchstart", function(e){
+    e.preventDefault();
+    start(e);
+  }, {passive:false});
+
+  canvas.addEventListener("touchmove", function(e){
+    e.preventDefault();
+    move(e);
+  }, {passive:false});
+
+  canvas.addEventListener("touchend", end);
 }
 
-document.addEventListener("DOMContentLoaded",()=>{
-  enableSignature(document.getElementById("bfsSignature"));
-  enableSignature(document.getElementById("subSignature"));
+/* Attach AFTER page loads */
+window.addEventListener("load", function(){
+  setupSignature("bfsSignature");
+  setupSignature("subSignature");
 });
+
+</script>
 
 /* PHOTO PREVIEW */
 document.getElementById("photoUpload").addEventListener("change",function(e){
