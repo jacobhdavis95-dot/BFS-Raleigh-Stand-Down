@@ -8,13 +8,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 /* =========================
    PAGE BREAK CONTROL
 ========================= */
 
-.card h2{
-  font-size:16px;
+.card,
 .section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+h2, h3 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+ul, ol, p {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
   page-break-inside: avoid;
   break-inside: avoid;
 }
@@ -463,10 +476,6 @@ document.getElementById("photoUpload").addEventListener("change",function(e){
    CLEAN PDF EXPORT WITH LIVE HEADER
 =============================== */
 
-  });
-
-  const contentImg = contentCanvas.toDataURL("image/jpeg", 1.0);
-
   const pdf = new jsPDF("p", "mm", "a4");
 
   const pageWidth = 210;
@@ -590,16 +599,14 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
-
-});
-PHOTO PREVIEW CODE
-
 INITIAL PAD CODE
-
 DRAW ENGINE CODE
+PHOTO PREVIEW CODE
+PERFECT PAGE FIT PDF EXPORT
 
-NEW PERFECT PAGE FIT PDF EXPORT
-
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
