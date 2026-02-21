@@ -115,7 +115,8 @@ canvas{
   width:100%;
   height:120px;
   border:2px solid #C8102E;
-  margin-top:10px;
+  border-radius:8px;
+  touch-action:none;
 }
 
 /* Inspection table */
@@ -807,23 +808,79 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
-<script>
-   // ← your photo preview code
-</script>
+/* ===== PROFESSIONAL SIGNATURE ENGINE ===== */
 
-<!-- 🔴 PASTE THE NEW SIGNATURE SCRIPT RIGHT HERE -->
+function enableSignature(canvas){
 
-<script>
-   /* PROFESSIONAL SIGNATURE ENGINE */
-   function setupSignature(canvasId){
-     ...
-   }
+  const ctx = canvas.getContext("2d");
 
-   document.addEventListener("DOMContentLoaded", function(){
-     setupSignature("bfsSignature");
-     setupSignature("subSignature");
-   });
-</script>
+  function resizeCanvas(){
+    const ratio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+  }
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  let drawing = false;
+
+  function getPosition(e){
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  }
+
+  canvas.addEventListener("mousedown", e=>{
+    drawing = true;
+    const pos = getPosition(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  });
+
+  canvas.addEventListener("mousemove", e=>{
+    if(!drawing) return;
+    const pos = getPosition(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  });
+
+  canvas.addEventListener("mouseup", ()=> drawing = false);
+  canvas.addEventListener("mouseleave", ()=> drawing = false);
+
+  // Touch support
+  canvas.addEventListener("touchstart", e=>{
+    e.preventDefault();
+    drawing = true;
+    const pos = getPosition(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }, { passive:false });
+
+  canvas.addEventListener("touchmove", e=>{
+    e.preventDefault();
+    if(!drawing) return;
+    const pos = getPosition(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }, { passive:false });
+
+  canvas.addEventListener("touchend", ()=> drawing = false);
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  enableSignature(document.getElementById("bfsSignature"));
+  enableSignature(document.getElementById("subSignature"));
+});
 
 </body>
 </html>
