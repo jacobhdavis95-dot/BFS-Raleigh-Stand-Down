@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BFS | Safety Stand-Down</title>
+<title>BFS Safety Stand-Down</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -11,482 +11,139 @@
 
 body{
   font-family:'Inter',sans-serif;
+  background:#e9ecef;
   margin:0;
-  background:#f4f6f8;
-  color:#1F2A44;
 }
 
-.topbar{
-  background:#C8102E;
-  color:#fff;
-  padding:20px;
-  text-align:center;
+/* 8.5 x 11 page */
+.page{
+  width:8.5in;
+  min-height:11in;
+  background:white;
+  margin:30px auto;
+  padding:60px 60px 80px 60px;
+  box-shadow:0 5px 25px rgba(0,0,0,.15);
+  position:relative;
+  page-break-after:always;
 }
 
-.topbar h1{
-  margin:0;
+/* Header */
+.header{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:80px;
+  background:#0C2D5C;
+  color:white;
+  display:flex;
+  align-items:center;
+  padding:0 40px;
+}
+
+.header img{
+  height:40px;
+  margin-right:20px;
+}
+
+.header-title{
   font-size:22px;
   font-weight:700;
-}
-
-.subbar{
-  background:#1F2A44;
-  color:#fff;
-  text-align:center;
-  padding:8px;
-  font-size:12px;
   letter-spacing:1px;
 }
 
-.wrapper{
-  max-width:900px;
-  margin:auto;
-  padding:30px 20px 80px 20px;
+/* Footer */
+.footer{
+  position:absolute;
+  bottom:25px;
+  left:60px;
+  right:60px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  font-weight:600;
+  color:#0C2D5C;
 }
 
-.card{
-  background:#fff;
-  border-radius:12px;
-  padding:25px;
-  margin-bottom:25px;
-  box-shadow:0 4px 18px rgba(0,0,0,.06);
+.bldr{
+  background:#C8102E;
+  color:white;
+  padding:4px 8px;
+  font-size:11px;
+  font-weight:700;
 }
 
-.card h2{
-  margin-top:0;
+/* Section titles */
+.section-title{
+  margin-top:100px;
   font-size:18px;
   font-weight:700;
   margin-bottom:20px;
+  color:#0C2D5C;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-}
-
+/* Form styling */
 label{
   font-size:13px;
   font-weight:600;
+  display:block;
+  margin-top:15px;
 }
 
-input, select, textarea{
+input, textarea, select{
   width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  font-size:14px;
+  padding:8px;
+  margin-top:5px;
+  border:1px solid #ccc;
+  border-radius:4px;
+  font-size:13px;
 }
 
 textarea{
   resize:vertical;
 }
 
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+/* Signature */
 canvas{
   width:100%;
   height:120px;
   border:2px solid #C8102E;
-  border-radius:8px;
   margin-top:10px;
-  touch-action:none;
 }
 
-.initial-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
+/* Inspection table */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
 }
 
-.btn{
+table th, table td{
+  border:1px solid #ccc;
+  padding:6px;
+  font-size:12px;
+  text-align:center;
+}
+
+button{
   background:#C8102E;
-  color:#fff;
+  color:white;
   border:none;
-  padding:12px;
-  border-radius:8px;
+  padding:12px 20px;
+  border-radius:6px;
   cursor:pointer;
   font-weight:600;
-}
-
-.btn-secondary{
-  background:#1F2A44;
-}
-
-#savePdfBtn{
-  width:100%;
-  margin-top:25px;
+  margin-top:20px;
 }
 
 </style>
 </head>
 
 <body>
-
-<div class="topbar">
-  <h1>Builders FirstSource</h1>
-  Safety Stand-Down
-</div>
-
-<div class="subbar">RALEIGH INSTALL SERVICES | DRIVE TO ZERO</div>
-
-<div class="wrapper" id="pdfContent">
-
-<!-- PROJECT INFO -->
-<div class="card">
-  <h2>Project Information</h2>
-  <div class="grid">
-    <div><label>Date</label><input type="date"></div>
-    <div><label>BFS Representative</label><input type="text"></div>
-    <div><label>Customer</label><input type="text"></div>
-    <div><label>Building</label><input type="text"></div>
-    <div><label>Project / Jobsite</label><input type="text"></div>
-    <div>
-      <label>Project Type</label>
-      <select>
-        <option>Framing</option>
-        <option>Windows / Doors</option>
-        <option>Trim</option>
-        <option>Deck</option>
-        <option>Other</option>
-      </select>
-    </div>
-    <div><label>Lot</label><input type="text"></div>
-    <div><label># Workers Onsite</label><input type="number"></div>
-    <div><label>Project Subcontractor</label><input type="text"></div>
-    <div><label>Onsite Supervisor (Subcontractor)</label><input type="text"></div>
-  </div>
-</div>
-
-<!-- SAFETY SUMMARY -->
-<div class="card">
-  <h2>Detailed Safety Summary</h2>
-  <label>Safety Topics Discussed</label>
-  <textarea rows="4"></textarea>
-
-  <label style="margin-top:15px;">Corrective Actions Needed</label>
-  <textarea rows="4"></textarea>
-  <!-- ============================= -->
-<!-- FULL SAFETY PROGRAM CONTENT -->
-<!-- ============================= -->
-<div class="card">
-  <h2>Safety Violation Breakdown & Enforcement</h2>
-
-  <p><strong>Hardhat – Glasses – Boots:</strong> $50–$100 per person</p>
-  <p><strong>Ladder Violation:</strong> $100–$250 per person</p>
-  <p><strong>Safety Rails:</strong> $100–$250 per person</p>
-  <p><strong>Crane Safety Violation:</strong> $100–$500 per offense</p>
-  <p><strong>Drugs or Alcohol:</strong> $500 – Termination</p>
-
-  <h3>Fall Protection</h3>
-  <ul>
-    <li>1st Offense: $500 per person</li>
-    <li>2nd Offense (same year): $1,000 per person + 1 month no work</li>
-    <li>3rd Offense (same year): $1,500 per person + 1 month no work</li>
-    <li>4th Offense: $2,000 per person + 1 year no work</li>
-    <li>5th Offense: No longer working for BFS</li>
-  </ul>
-
-  <h3>Scaffolding</h3>
-  <ul>
-    <li>Site-built scaffolding is NOT allowed.</li>
-    <li>Only steel site-assembled scaffolding is permitted.</li>
-    <li>No improvised scaffold systems allowed.</li>
-  </ul>
-</div>
-
-<div class="card">
-  <h2>Severe Weather</h2>
-  <ul>
-    <li>Wall panels and trusses must be properly braced.</li>
-    <li>If materials fall due to improper bracing, automatic rebuild required.</li>
-    <li>High wind warnings require securing all loose materials.</li>
-  </ul>
-</div>
-
-<div class="card">
-  <h2>Cold Weather</h2>
-  <ul>
-    <li>Propane heaters and burn piles are prohibited.</li>
-  </ul>
-</div>
-
-<div class="card">
-  <h2>Material Handling</h2>
-  <ul>
-    <li>Do NOT move material from one lot to another without approval.</li>
-    <li>Unauthorized transfers may be treated as theft.</li>
-    <li>Damaged materials must be reported before installation.</li>
-  </ul>
-</div>
-
-<div class="card">
-  <h2>Foundations</h2>
-  <ol>
-    <li>Notify builder or project manager immediately.</li>
-    <li>Document issue with written notice and photos.</li>
-    <li>Determine solution before continuing work.</li>
-  </ol>
-  <p><strong>Failure to notify before continuing work will result in subcontractor responsibility for repair costs.</strong></p>
-</div>
-
-<div class="card">
-  <h2>Working Hours</h2>
-  <ul>
-    <li>No framing before 7:00 AM or after 7:00 PM (Mon–Fri)</li>
-    <li>No framing before 9:00 AM Saturday</li>
-    <li>No work on Sunday</li>
-  </ul>
-</div>
-
-<div class="card">
-  <h2>Subcontractor Safety Requirements</h2>
-
-  <h3>A. General</h3>
-  <ul>
-    <li>Subcontractor is 100% responsible for safety of employees and suppliers.</li>
-    <li>All personnel must follow BFS Safety Management Program.</li>
-    <li>Unsafe conditions must be corrected immediately.</li>
-  </ul>
-
-  <h3>B. Roles & Responsibilities</h3>
-  <ul>
-    <li>Subcontractor must designate a Competent Person.</li>
-    <li>Competent Person must have authority to correct hazards.</li>
-  </ul>
-
-  <h3>C. Written Safety Plans</h3>
-  <ul>
-    <li>Written Safety & Health Plan required when applicable.</li>
-    <li>Fall protection plan required at heights of 6 ft or more.</li>
-  </ul>
-
-  <h3>D. Training</h3>
-  <ul>
-    <li>Subcontractor responsible for required safety training.</li>
-  </ul>
-
-  <h3>E. Compliance</h3>
-  <ul>
-    <li>Violations may result in removal, suspension, or termination.</li>
-    <li>OSHA citations are subcontractor responsibility.</li>
-  </ul>
-
-  <h3>F. Incident Reporting</h3>
-  <ul>
-    <li>Injuries must be reported immediately.</li>
-    <li>Incident report required within 24 hours.</li>
-  </ul>
-
-  <h3>G. Code of Safe Practices</h3>
-  <ul>
-    <li>Maintain clean and hazard-free work areas.</li>
-    <li>Follow all OSHA, state, and local safety regulations.</li>
-    <li>Proper PPE required at all times.</li>
-  </ul>
-
-  <h3>Fire Prevention</h3>
-  <ul>
-    <li>No smoking in project site.</li>
-    <li>Flammable spills must be cleaned immediately.</li>
-    <li>Fire extinguishers must remain accessible.</li>
-  </ul>
-</div>
-
-<!-- INITIALS -->
-<div class="card">
-  <h2>Stand-Down Attendee Initials</h2>
-  <div class="initial-grid" id="initialContainer"></div>
-</div>
-
-<!-- SIGNATURES -->
-<div class="card">
-  <h2>BFS Representative Signature</h2>
-  <canvas id="bfsSignature"></canvas>
-</div>
-
-<div class="card">
-  <h2>Subcontractor Representative Signature</h2>
-  <canvas id="subSignature"></canvas>
-</div>
-
-<!-- PHOTOS -->
-<div class="card">
-  <h2>Jobsite Photos</h2>
-  <input type="file" id="photoUpload" accept="image/*" multiple>
-  <div id="photoPreview" style="margin-top:15px;"></div>
-</div>
-
-</div>
-
-<div class="wrapper">
-  <button class="btn" id="savePdfBtn">Save Safety Stand Down (PDF)</button>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-
-/* INITIAL PADS */
-
-const initialContainer = document.getElementById("initialContainer");
-
-for(let i=0;i<10;i++){
-  const wrapper = document.createElement("div");
-
-  const canvas = document.createElement("canvas");
-  wrapper.appendChild(canvas);
-
-  const btn = document.createElement("button");
-  btn.className="btn btn-secondary";
-  btn.innerText="Clear";
-  btn.onclick = ()=>clearSpecificCanvas(canvas);
-
-  wrapper.appendChild(btn);
-  initialContainer.appendChild(wrapper);
-}
-
-/* DRAW ENGINE */
-
-function enableCanvas(canvas){
-  const ctx = canvas.getContext("2d");
-
-  function resize(){
-    const ratio = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * ratio;
-    canvas.height = rect.height * ratio;
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(ratio, ratio);
-    ctx.lineWidth=2;
-    ctx.lineCap="round";
-  }
-
-  resize();
-  window.addEventListener("resize",resize);
-
-  let drawing=false;
-
-  function getPos(e){
-    const rect=canvas.getBoundingClientRect();
-    const x=e.touches?e.touches[0].clientX:e.clientX;
-    const y=e.touches?e.touches[0].clientY:e.clientY;
-    return {x:x-rect.left,y:y-rect.top};
-  }
-
-  canvas.addEventListener("mousedown",e=>{
-    drawing=true;
-    const pos=getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x,pos.y);
-  });
-
-  canvas.addEventListener("mousemove",e=>{
-    if(!drawing)return;
-    const pos=getPos(e);
-    ctx.lineTo(pos.x,pos.y);
-    ctx.stroke();
-  });
-
-  canvas.addEventListener("mouseup",()=>drawing=false);
-  canvas.addEventListener("mouseleave",()=>drawing=false);
-
-  canvas.addEventListener("touchstart",e=>{
-    drawing=true;
-    const pos=getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x,pos.y);
-  },{passive:false});
-
-  canvas.addEventListener("touchmove",e=>{
-    e.preventDefault();
-    if(!drawing)return;
-    const pos=getPos(e);
-    ctx.lineTo(pos.x,pos.y);
-    ctx.stroke();
-  },{passive:false});
-
-  canvas.addEventListener("touchend",()=>drawing=false);
-}
-
-function clearSpecificCanvas(canvas){
-  const ctx=canvas.getContext("2d");
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-window.addEventListener("load",()=>{
-  document.querySelectorAll("canvas").forEach(enableCanvas);
-});
-
-/* PHOTO PREVIEW */
-
-document.getElementById("photoUpload").addEventListener("change",function(e){
-  const preview=document.getElementById("photoPreview");
-  preview.innerHTML="";
-  Array.from(e.target.files).forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=function(evt){
-      const img=document.createElement("img");
-      img.src=evt.target.result;
-      img.style.width="100%";
-      img.style.marginBottom="10px";
-      img.style.borderRadius="8px";
-      preview.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
-/* PDF */
-
-document.getElementById("savePdfBtn").addEventListener("click",async()=>{
-
-  document.querySelectorAll(".btn-secondary").forEach(b=>b.remove());
-
-  const { jsPDF } = window.jspdf;
-  const element=document.getElementById("pdfContent");
-
-  const canvas=await html2canvas(element,{scale:2});
-  const imgData=canvas.toDataURL("image/jpeg",1);
-  const pdf=new jsPDF("p","mm","a4");
-
-  const pageWidth=210;
-  const pageHeight=297;
-
-  const imgWidth=pageWidth;
-  const imgHeight=(canvas.height*imgWidth)/canvas.width;
-
-  let heightLeft=imgHeight;
-  let position=0;
-  let pageNumber=1;
-
-  while(heightLeft>0){
-
-    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
-
-    pdf.setFillColor(200,16,46);
-    pdf.rect(0,0,pageWidth,12,"F");
-
-    pdf.setTextColor(255,255,255);
-    pdf.setFontSize(10);
-    pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
-
-    pdf.setTextColor(0,0,0);
-    pdf.text("Page "+pageNumber,pageWidth-25,pageHeight-5);
-
-    heightLeft-=pageHeight;
-
-    if(heightLeft>0){
-      pdf.addPage();
-      position-=pageHeight;
-      pageNumber++;
-    }
-  }
-
-  pdf.save("BFS_Safety_Stand_Down.pdf");
-});
-
-</script>
-
-</body>
-</html>
