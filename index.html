@@ -613,3 +613,200 @@ button{
   </div>
 
 </div>
+<!-- ================= PAGE 16 ================= -->
+<div class="page">
+
+  <div class="header">
+    <img src="46ECE308-BC57-4E67-8B9C-3E5687EBE8FA.png">
+    <div class="header-title">ACKNOWLEDGEMENT & AGREEMENT</div>
+  </div>
+
+  <div class="section-title">Safety Program Acknowledgement</div>
+
+  <p style="line-height:1.7;">
+    By signing below, the subcontractor acknowledges receipt of the
+    Builders FirstSource Safety Stand-Down Orientation and agrees to
+    comply with all policies, procedures, and enforcement standards
+    outlined in this document.
+  </p>
+
+  <div class="grid">
+    <div>
+      <label>BFS Representative Name</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Subcontractor Representative Name</label>
+      <input type="text">
+    </div>
+  </div>
+
+  <label>BFS Representative Signature</label>
+  <canvas id="bfsSignature"></canvas>
+
+  <label>Subcontractor Representative Signature</label>
+  <canvas id="subSignature"></canvas>
+
+  <div class="footer">
+    <div>OUTPERFORM TODAY. TRANSFORM TOMORROW.</div>
+    <div class="bldr">BLDR.com</div>
+  </div>
+
+</div>
+<!-- ================= PAGE 17 ================= -->
+<div class="page">
+
+  <div class="header">
+    <img src="46ECE308-BC57-4E67-8B9C-3E5687EBE8FA.png">
+    <div class="header-title">JOB SITE INSPECTION LOG</div>
+  </div>
+
+  <div class="section-title">Safety Inspection Record</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Area Inspected</th>
+        <th>Violation Found</th>
+        <th>Corrective Action</th>
+        <th>Completed By</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 10 Fixed Rows -->
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div>OUTPERFORM TODAY. TRANSFORM TOMORROW.</div>
+    <div class="bldr">BLDR.com</div>
+  </div>
+
+</div>
+<!-- ================= PAGE 18 ================= -->
+<div class="page">
+
+  <div class="header">
+    <img src="46ECE308-BC57-4E67-8B9C-3E5687EBE8FA.png">
+    <div class="header-title">JOB SITE PHOTO DOCUMENTATION</div>
+  </div>
+
+  <div class="section-title">Upload Photos</div>
+
+  <input type="file" id="photoUpload" accept="image/*" multiple>
+
+  <div id="photoPreview" style="margin-top:20px;"></div>
+
+  <button id="savePdfBtn">Save Safety Stand-Down as PDF</button>
+
+  <div class="footer">
+    <div>OUTPERFORM TODAY. TRANSFORM TOMORROW.</div>
+    <div class="bldr">BLDR.com</div>
+  </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+
+/* SIGNATURE ENGINE */
+function enableSignature(canvas){
+  const ctx = canvas.getContext("2d");
+  const ratio = window.devicePixelRatio || 1;
+
+  function resize(){
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+
+  let drawing = false;
+
+  canvas.addEventListener("mousedown", e=>{
+    drawing = true;
+    ctx.beginPath();
+  });
+
+  canvas.addEventListener("mousemove", e=>{
+    if(!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+  });
+
+  canvas.addEventListener("mouseup", ()=> drawing = false);
+  canvas.addEventListener("mouseleave", ()=> drawing = false);
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  enableSignature(document.getElementById("bfsSignature"));
+  enableSignature(document.getElementById("subSignature"));
+});
+
+/* PHOTO PREVIEW */
+document.getElementById("photoUpload").addEventListener("change",function(e){
+  const preview = document.getElementById("photoPreview");
+  preview.innerHTML="";
+  Array.from(e.target.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(evt){
+      const img = document.createElement("img");
+      img.src = evt.target.result;
+      img.style.width="100%";
+      img.style.marginBottom="15px";
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+/* FULL PDF EXPORT */
+document.getElementById("savePdfBtn").addEventListener("click", async function(){
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p","mm","a4");
+
+  const pages = document.querySelectorAll(".page");
+  let pageNumber = 1;
+
+  for(let i=0;i<pages.length;i++){
+
+    const canvas = await html2canvas(pages[i],{scale:2});
+    const imgData = canvas.toDataURL("image/jpeg",0.95);
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    pdf.addImage(imgData,"JPEG",0,0,pageWidth,pageHeight);
+
+    pdf.setFontSize(9);
+    pdf.text("Page "+pageNumber, pageWidth-25, pageHeight-5);
+
+    if(i < pages.length-1){
+      pdf.addPage();
+      pageNumber++;
+    }
+  }
+
+  pdf.save("BFS_Safety_Stand_Down.pdf");
+
+});
+</script>
