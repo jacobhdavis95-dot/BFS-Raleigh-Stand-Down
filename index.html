@@ -9,42 +9,8 @@
 
 <style>
 
-/* =========================
-   PAGE BREAK CONTROL
-========================= */
-
-.card,
-.section {
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-h2, h3 {
-  page-break-after: avoid;
-  break-after: avoid;
-}
-
-ul, ol, p {
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
-
-h2, h3 {
-  page-break-after: avoid;
-  
-  break-after: avoid;
-}
-
-ul, ol, p {
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
 body{
   font-family:'Inter',sans-serif;
-  font-size:13px;
   margin:0;
   background:#f4f6f8;
   color:#1F2A44;
@@ -448,7 +414,7 @@ function clearSpecificCanvas(canvas){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+window.addEventListener("load",()=>{
   document.querySelectorAll("canvas").forEach(enableCanvas);
 });
 
@@ -472,141 +438,55 @@ document.getElementById("photoUpload").addEventListener("change",function(e){
 });
 
 /* PDF */
-/* ===============================
-   CLEAN PDF EXPORT WITH LIVE HEADER
-=============================== */
 
-  const pdf = new jsPDF("p", "mm", "a4");
+document.getElementById("savePdfBtn").addEventListener("click",async()=>{
 
-  const pageWidth = 210;
-  const pageHeight = 297;
-
-  const headerHeight = 20; // space for header
-  const usableHeight = pageHeight - headerHeight - 10;
-
-  const imgWidth = pageWidth;
-  const imgHeight = (contentCanvas.height * imgWidth) / contentCanvas.width;
-
-  let heightLeft = imgHeight;
-  let position = 0;
-  let pageNumber = 1;
-
-  while (heightLeft > 0) {
-
-    // Add live header image
-    pdf.addImage(headerImg, "PNG", 0, 0, pageWidth, 14);
-    pdf.addImage(subbarImg, "PNG", 0, 14, pageWidth, 6);
-
-    // Add content slice
-    pdf.addImage(
-      contentImg,
-      "JPEG",
-      0,
-      headerHeight + position,
-      imgWidth,
-      imgHeight
-    );
-
-    // Page number
-    pdf.setFontSize(9);
-    pdf.setTextColor(0,0,0);
-    pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
-
-    heightLeft -= usableHeight;
-
-    if (heightLeft > 0) {
-      pdf.addPage();
-      position -= usableHeight;
-      pageNumber++;
-    }
-  }
-
-  pdf.save("BFS_Safety_Stand_Down.pdf");
-
-});
-/* ===============================
-   STABLE PDF EXPORT
-=============================== */
-
-/* ===============================
-   PERFECT PAGE FIT PDF EXPORT
-=============================== */
-
-document.getElementById("savePdfBtn").addEventListener("click", async function(){
+  document.querySelectorAll(".btn-secondary").forEach(b=>b.remove());
 
   const { jsPDF } = window.jspdf;
+  const element=document.getElementById("pdfContent");
 
-  const content = document.getElementById("pdfContent");
-  const header = document.querySelector(".topbar");
-  const subbar = document.querySelector(".subbar");
+  const canvas=await html2canvas(element,{scale:2});
+  const imgData=canvas.toDataURL("image/jpeg",1);
+  const pdf=new jsPDF("p","mm","a4");
 
-  const pdf = new jsPDF("p","mm","a4");
+  const pageWidth=210;
+  const pageHeight=297;
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgWidth=pageWidth;
+  const imgHeight=(canvas.height*imgWidth)/canvas.width;
 
-  const headerHeight = 18;
+  let heightLeft=imgHeight;
+  let position=0;
+  let pageNumber=1;
 
-  // Capture header
-  const headerCanvas = await html2canvas(header, { scale: 2 });
-  const subbarCanvas = await html2canvas(subbar, { scale: 2 });
+  while(heightLeft>0){
 
-  const headerImg = headerCanvas.toDataURL("image/png");
-  const subbarImg = subbarCanvas.toDataURL("image/png");
+    pdf.addImage(imgData,"JPEG",0,position,imgWidth,imgHeight);
 
-  // Capture content (slightly smaller scale)
-  const contentCanvas = await html2canvas(content, {
-    scale: 1.4,
-    backgroundColor: "#ffffff"
-  });
+    pdf.setFillColor(200,16,46);
+    pdf.rect(0,0,pageWidth,12,"F");
 
-  const imgData = contentCanvas.toDataURL("image/jpeg", 0.95);
+    pdf.setTextColor(255,255,255);
+    pdf.setFontSize(10);
+    pdf.text("Builders FirstSource | Safety Stand-Down",10,8);
 
-  const imgWidth = pageWidth;
-  const imgHeight = (contentCanvas.height * imgWidth) / contentCanvas.width;
+    pdf.setTextColor(0,0,0);
+    pdf.text("Page "+pageNumber,pageWidth-25,pageHeight-5);
 
-  const usableHeight = pageHeight - headerHeight - 8;
+    heightLeft-=pageHeight;
 
-  let heightLeft = imgHeight;
-  let position = 0;
-  let pageNumber = 1;
-
-  while(heightLeft > 0){
-
-    // Add header
-    pdf.addImage(headerImg,"PNG",0,0,pageWidth,12);
-    pdf.addImage(subbarImg,"PNG",0,12,pageWidth,6);
-
-    pdf.addImage(
-      imgData,
-      "JPEG",
-      0,
-      headerHeight + position,
-      imgWidth,
-      imgHeight
-    );
-
-    pdf.setFontSize(9);
-    pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
-
-    heightLeft -= usableHeight;
-
-    if(heightLeft > 0){
+    if(heightLeft>0){
       pdf.addPage();
-      position -= usableHeight;
+      position-=pageHeight;
       pageNumber++;
     }
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
-INITIAL PAD CODE
-DRAW ENGINE CODE
-PHOTO PREVIEW CODE
-PERFECT PAGE FIT PDF EXPORT
+});
 
 </script>
-</body>
-</html>
-</script>
+
 </body>
 </html>
