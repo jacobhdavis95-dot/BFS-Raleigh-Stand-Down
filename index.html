@@ -12,7 +12,8 @@
    PAGE BREAK CONTROL
 ========================= */
 
-.card,
+.card h2{
+  font-size:16px;
 .section {
   page-break-inside: avoid;
   break-inside: avoid;
@@ -20,6 +21,7 @@
 
 h2, h3 {
   page-break-after: avoid;
+  
   break-after: avoid;
 }
 
@@ -29,6 +31,7 @@ ul, ol, p {
 }
 body{
   font-family:'Inter',sans-serif;
+  font-size:13px;
   margin:0;
   background:#f4f6f8;
   color:#1F2A44;
@@ -516,6 +519,10 @@ document.getElementById("photoUpload").addEventListener("change",function(e){
    STABLE PDF EXPORT
 =============================== */
 
+/* ===============================
+   PERFECT PAGE FIT PDF EXPORT
+=============================== */
+
 document.getElementById("savePdfBtn").addEventListener("click", async function(){
 
   const { jsPDF } = window.jspdf;
@@ -524,31 +531,32 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
   const header = document.querySelector(".topbar");
   const subbar = document.querySelector(".subbar");
 
-  // Capture header images
+  const pdf = new jsPDF("p","mm","a4");
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const headerHeight = 18;
+
+  // Capture header
   const headerCanvas = await html2canvas(header, { scale: 2 });
   const subbarCanvas = await html2canvas(subbar, { scale: 2 });
 
   const headerImg = headerCanvas.toDataURL("image/png");
   const subbarImg = subbarCanvas.toDataURL("image/png");
 
-  // Capture form content
+  // Capture content (slightly smaller scale)
   const contentCanvas = await html2canvas(content, {
-    scale: 2,
+    scale: 1.4,
     backgroundColor: "#ffffff"
   });
 
-  const contentImg = contentCanvas.toDataURL("image/jpeg", 0.95);
-
-  const pdf = new jsPDF("p","mm","a4");
-
-  const pageWidth = 210;
-  const pageHeight = 297;
-
-  const headerHeight = 20;
-  const usableHeight = pageHeight - headerHeight - 10;
+  const imgData = contentCanvas.toDataURL("image/jpeg", 0.95);
 
   const imgWidth = pageWidth;
   const imgHeight = (contentCanvas.height * imgWidth) / contentCanvas.width;
+
+  const usableHeight = pageHeight - headerHeight - 8;
 
   let heightLeft = imgHeight;
   let position = 0;
@@ -557,12 +565,11 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
   while(heightLeft > 0){
 
     // Add header
-    pdf.addImage(headerImg,"PNG",0,0,pageWidth,14);
-    pdf.addImage(subbarImg,"PNG",0,14,pageWidth,6);
+    pdf.addImage(headerImg,"PNG",0,0,pageWidth,12);
+    pdf.addImage(subbarImg,"PNG",0,12,pageWidth,6);
 
-    // Add content slice
     pdf.addImage(
-      contentImg,
+      imgData,
       "JPEG",
       0,
       headerHeight + position,
@@ -570,9 +577,7 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
       imgHeight
     );
 
-    // Page number
     pdf.setFontSize(9);
-    pdf.setTextColor(0,0,0);
     pdf.text("Page " + pageNumber, pageWidth - 25, pageHeight - 5);
 
     heightLeft -= usableHeight;
@@ -587,7 +592,14 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
   pdf.save("BFS_Safety_Stand_Down.pdf");
 
 });
-</script>
+PHOTO PREVIEW CODE
 
+INITIAL PAD CODE
+
+DRAW ENGINE CODE
+
+NEW PERFECT PAGE FIT PDF EXPORT
+
+</script>
 </body>
 </html>
