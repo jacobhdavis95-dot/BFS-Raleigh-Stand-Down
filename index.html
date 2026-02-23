@@ -719,10 +719,12 @@ button{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 
-/* ===== BULLETPROOF SIGNATURE ENGINE ===== */
+/* ===== SIGNATURE ENGINE ===== */
 
 function setupSignature(canvasId){
 
@@ -734,13 +736,10 @@ function setupSignature(canvasId){
   function resizeCanvas(){
     const ratio = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
-
     canvas.width = rect.width * ratio;
     canvas.height = rect.height * ratio;
-
     ctx.setTransform(1,0,0,1,0,0);
     ctx.scale(ratio, ratio);
-
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
   }
@@ -754,11 +753,7 @@ function setupSignature(canvasId){
     const rect = canvas.getBoundingClientRect();
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const y = e.touches ? e.touches[0].clientY : e.clientY;
-
-    return {
-      x: x - rect.left,
-      y: y - rect.top
-    };
+    return { x: x - rect.left, y: y - rect.top };
   }
 
   function start(e){
@@ -797,32 +792,34 @@ function setupSignature(canvasId){
   canvas.addEventListener("touchend", end);
 }
 
-/* Attach AFTER page loads */
 window.addEventListener("load", function(){
   setupSignature("bfsSignature");
   setupSignature("subSignature");
 });
 
-</script>
 
 /* PHOTO PREVIEW */
-document.getElementById("photoUpload").addEventListener("change",function(e){
+
+document.getElementById("photoUpload").addEventListener("change", function(e){
   const preview = document.getElementById("photoPreview");
-  preview.innerHTML="";
+  preview.innerHTML = "";
+
   Array.from(e.target.files).forEach(file=>{
     const reader = new FileReader();
     reader.onload = function(evt){
       const img = document.createElement("img");
       img.src = evt.target.result;
-      img.style.width="100%";
-      img.style.marginBottom="15px";
+      img.style.width = "100%";
+      img.style.marginBottom = "15px";
       preview.appendChild(img);
     };
     reader.readAsDataURL(file);
   });
 });
 
-/* FULL PDF EXPORT */
+
+/* PDF EXPORT */
+
 document.getElementById("savePdfBtn").addEventListener("click", async function(){
 
   const { jsPDF } = window.jspdf;
@@ -840,7 +837,6 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
     const pageHeight = pdf.internal.pageSize.getHeight();
 
     pdf.addImage(imgData,"JPEG",0,0,pageWidth,pageHeight);
-
     pdf.setFontSize(9);
     pdf.text("Page "+pageNumber, pageWidth-25, pageHeight-5);
 
@@ -851,8 +847,8 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
   }
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
+});
 
+</script>
 </body>
 </html>
-});
-</script>
