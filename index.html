@@ -843,7 +843,9 @@ document.getElementById("photoUpload").addEventListener("change", function(e){
 
 /* PDF EXPORT */
 
-document.getElementById("savePdfBtn").addEventListener("click", async function(){
+const savePdfBtn = document.getElementById("savePdfBtn");
+if(savePdfBtn){
+savePdfBtn.addEventListener("click", async function(){
 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF("p","mm","a4");
@@ -871,7 +873,8 @@ document.getElementById("savePdfBtn").addEventListener("click", async function()
 
   pdf.save("BFS_Safety_Stand_Down.pdf");
 });
-
+}
+  
 </script>
 </body>
 </html>
