@@ -18,13 +18,16 @@ body{
 /* 8.5 x 11 page */
 .page{
   width:8.5in;
-  min-height:auto;
+  min-height:11in;
   background:white;
   margin:16px auto;
   padding:92px 42px 52px 42px;
+  box-sizing:border-box;
   box-shadow:0 5px 25px rgba(0,0,0,.15);
   position:relative;
-  page-break-after:auto;
+  page-break-after:always;
+  break-after:page;
+  overflow:hidden;
 }
 
 /* Header */
@@ -170,15 +173,38 @@ textarea[rows="4"]{ min-height:64px; }
 
 #photoPreview{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:8px;
+  grid-template-columns:1fr;
+  gap:12px;
   margin-top:10px !important;
 }
 
 #photoPreview img{
-  max-width:100%;
-  max-height:160px;
+  width:100%;
+  max-height:350px;
   object-fit:contain;
+  border:1px solid #d7dce2;
+  border-radius:6px;
+}
+
+@media print{
+  @page{
+    size:letter;
+    margin:0;
+  }
+
+  body{
+    background:white;
+  }
+
+  .page{
+    margin:0;
+    box-shadow:none;
+  }
+
+  button,
+  input[type="file"]{
+    display:none !important;
+  }
 }
 
 </style>
@@ -848,20 +874,25 @@ if(savePdfBtn){
 savePdfBtn.addEventListener("click", async function(){
 
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p","mm","a4");
+  const pdf = new jsPDF({ orientation:"p", unit:"mm", format:"letter" }); 
 
   const pages = document.querySelectorAll(".page");
   let pageNumber = 1;
 
   for(let i=0;i<pages.length;i++){
 
-    const canvas = await html2canvas(pages[i],{scale:2});
+    const canvas = await html2canvas(pages[i],{
+      scale:3,
+      backgroundColor:"#ffffff",
+      windowWidth:pages[i].scrollWidth,
+      windowHeight:pages[i].scrollHeight
+    });
     const imgData = canvas.toDataURL("image/jpeg",0.95);
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    pdf.addImage(imgData,"JPEG",0,0,pageWidth,pageHeight);
+    pdf.addImage(imgData,"JPEG",0,0,pageWidth,pageHeight,undefined,"FAST");
     pdf.setFontSize(9);
     pdf.text("Page "+pageNumber, pageWidth-25, pageHeight-5);
 
