@@ -130,6 +130,53 @@ table{
   margin-top:10px;
 }
 
+.initials-log{
+  margin-top:12px;
+  border:1px solid #d7dce2;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.initials-log-header,
+.initials-log-row{
+  display:grid;
+  grid-template-columns:1fr 150px;
+  align-items:center;
+}
+
+.initials-log-header{
+  background:#0C2D5C;
+  color:white;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+
+.initials-log-header div,
+.initials-log-row div{
+  padding:8px 10px;
+}
+
+.initials-log-row{
+  border-top:1px solid #d7dce2;
+}
+
+.initials-log-row:nth-child(odd){
+  background:#f8f9fb;
+}
+
+.initials-log-row input{
+  margin-top:0;
+  min-height:28px;
+}
+
+.initials-log-row input[aria-label^="Initials"]{
+  text-align:center;
+  font-weight:700;
+  letter-spacing:2px;
+}
+  
 table th, table td{
   border:1px solid #ccc;
   padding:4px;
@@ -664,35 +711,29 @@ ON SITE: Gave framer QR code to watch Safety Video. Had framer sign Subcontracto
   <canvas id="bfsSignature"></canvas>
 <canvas id="subSignature"></canvas>
 
-  
-   <div class="header-title">INSPECTION LOG</div>
+  <div class="header-title">TEAM MEMBER INITIALS LOG</div>
 
- <div class="section-title">Inspection Record</div>
+ <div class="section-title">Team Member Initials</div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Area Inspected</th>
-        <th>Violation Found</th>
-        <th>Corrective Action</th>
-        <th>Completed By</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- 10 Fixed Rows -->
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-      <tr><td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
-    </tbody>
-  </table>
+  <p style="line-height:1.5; font-size:12px; margin-bottom:8px;">
+    Each team member should print their name and add initials to confirm they completed the stand-down review.
+  </p>
+
+  <div class="initials-log" aria-label="Team member initials log">
+    <div class="initials-log-header"><div>Team Member Name</div><div>Initials</div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 1 Name" placeholder="Team Member 1"></div><div><input type="text" aria-label="Initials for Team Member 1" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 2 Name" placeholder="Team Member 2"></div><div><input type="text" aria-label="Initials for Team Member 2" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 3 Name" placeholder="Team Member 3"></div><div><input type="text" aria-label="Initials for Team Member 3" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 4 Name" placeholder="Team Member 4"></div><div><input type="text" aria-label="Initials for Team Member 4" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 5 Name" placeholder="Team Member 5"></div><div><input type="text" aria-label="Initials for Team Member 5" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 6 Name" placeholder="Team Member 6"></div><div><input type="text" aria-label="Initials for Team Member 6" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 7 Name" placeholder="Team Member 7"></div><div><input type="text" aria-label="Initials for Team Member 7" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 8 Name" placeholder="Team Member 8"></div><div><input type="text" aria-label="Initials for Team Member 8" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 9 Name" placeholder="Team Member 9"></div><div><input type="text" aria-label="Initials for Team Member 9" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 10 Name" placeholder="Team Member 10"></div><div><input type="text" aria-label="Initials for Team Member 10" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 11 Name" placeholder="Team Member 11"></div><div><input type="text" aria-label="Initials for Team Member 11" maxlength="4" placeholder="Initials"></div></div>
+    <div class="initials-log-row"><div><input type="text" aria-label="Team Member 12 Name" placeholder="Team Member 12"></div><div><input type="text" aria-label="Initials for Team Member 12" maxlength="4" placeholder="Initials"></div></div>
+  </div>
 
   <div class="footer">
     <div>OUTPERFORM TODAY. TRANSFORM TOMORROW.</div>
