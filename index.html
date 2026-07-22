@@ -324,6 +324,184 @@ textarea[rows="4"]{ min-height:64px; }
   display:none !important;
 }
 
+/* Field-friendly mobile layout */
+.field-helper{
+  max-width:8.5in;
+  margin:12px auto 0;
+  padding:14px 18px;
+  background:#fff;
+  border-left:6px solid #C8102E;
+  box-shadow:0 2px 14px rgba(0,0,0,.12);
+  box-sizing:border-box;
+}
+
+.field-helper strong{
+  color:#0C2D5C;
+  display:block;
+  font-size:17px;
+  margin-bottom:4px;
+}
+
+.field-helper span{
+  color:#334155;
+  display:block;
+  font-size:14px;
+  line-height:1.45;
+}
+
+.signature-label{
+  color:#0C2D5C;
+  font-size:13px;
+  font-weight:700;
+  margin:12px 0 6px;
+}
+
+@media (max-width:760px){
+  body{
+    background:#f5f7fa;
+  }
+
+  .field-helper{
+    margin:0;
+    max-width:none;
+    border-left:0;
+    border-bottom:4px solid #C8102E;
+    box-shadow:none;
+  }
+
+  .page,
+  .page:not(:first-of-type),
+  .compact-page{
+    width:100%;
+    min-height:0;
+    margin:0 0 14px;
+    padding:82px 16px 24px !important;
+    box-shadow:none;
+    overflow:visible;
+    page-break-after:auto;
+    break-after:auto;
+  }
+
+  .header,
+  .page:not(:first-of-type) .header{
+    height:64px;
+    padding:0 16px;
+  }
+
+  .header img,
+  .page:not(:first-of-type) .header img{
+    height:34px;
+    margin-right:12px;
+  }
+
+  .header-title,
+  .page:not(:first-of-type) .header-title{
+    font-size:18px;
+    letter-spacing:.3px;
+    line-height:1.15;
+  }
+
+  .section-title,
+  .page:not(:first-of-type) .section-title,
+  .compact-page .section-title{
+    background:#eef4fb;
+    border-left:5px solid #C8102E;
+    border-radius:8px;
+    color:#0C2D5C;
+    font-size:18px !important;
+    margin:18px 0 12px !important;
+    padding:10px 12px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+
+  label,
+  .page:not(:first-of-type) label,
+  .compact-page label{
+    color:#0f172a;
+    font-size:16px !important;
+    margin-top:14px !important;
+  }
+
+  input, textarea, select,
+  .initials-log-row input{
+    border:2px solid #b8c2cc;
+    border-radius:10px;
+    box-sizing:border-box;
+    font-size:18px;
+    min-height:48px;
+    padding:12px;
+  }
+
+  textarea,
+  textarea[rows="4"],
+  textarea[rows="6"],
+  .page:not(:first-of-type) textarea[rows="4"],
+  .page:not(:first-of-type) textarea[rows="6"],
+  .compact-page textarea[rows="4"]{
+    min-height:150px !important;
+  }
+
+  button{
+    border-radius:12px;
+    font-size:18px;
+    min-height:54px;
+    padding:14px 18px;
+    width:100%;
+  }
+
+  canvas,
+  .page:not(:first-of-type) canvas{
+    height:150px;
+    border-width:3px;
+  }
+
+  .initials-log{
+    border:0;
+    border-radius:0;
+  }
+
+  .initials-log-header{
+    display:none;
+  }
+
+  .initials-log-row{
+    background:#fff !important;
+    border:1px solid #d7dce2;
+    border-radius:12px;
+    display:grid;
+    gap:10px;
+    grid-template-columns:1fr;
+    margin-bottom:12px;
+    padding:12px;
+  }
+
+  .initials-log-row div{
+    padding:0;
+  }
+
+  .footer{
+    display:none;
+  }
+}
+
+.is-exporting .field-helper{
+  display:none !important;
+}
+
+.is-exporting .page{
+  width:8.5in !important;
+  min-height:11in !important;
+  margin:0 auto !important;
+  page-break-after:always !important;
+  break-after:page !important;
+  overflow:hidden !important;
+}
+
+  
 @media print{
   @page{
     size:letter;
@@ -349,6 +527,10 @@ textarea[rows="4"]{ min-height:64px; }
 </head>
 
 <body>
+ <div class="field-helper">
+  <strong>Field Mode: fill out on phone or tablet</strong>
+  <span>Large tap-friendly fields are shown on job sites. Use the red button after photos are added to save the completed stand-down as a PDF.</span>
+</div> 
 <!-- ================= PAGE 1 ================= -->
 <div class="page">
 
@@ -713,7 +895,9 @@ ON SITE: Gave framer QR code to watch Safety Video. Had framer sign Subcontracto
     </div>
   </div>
 
+  <div class="signature-label">BFS Representative Signature</div>
   <canvas id="bfsSignature"></canvas>
+  <div class="signature-label">Subcontractor Representative Signature</div>
 <canvas id="subSignature"></canvas>
 
   <div class="header-title">TEAM MEMBER INITIALS LOG</div>
