@@ -356,6 +356,84 @@ textarea[rows="4"]{ min-height:64px; }
   margin:12px 0 6px;
 }
 
+/* App tabs and internal stand-down log */
+.app-tabs{
+  max-width:8.5in;
+  margin:0 auto;
+  padding:12px 16px 0;
+  box-sizing:border-box;
+  display:flex;
+  gap:8px;
+}
+.tab-button{
+  background:#0C2D5C;
+  color:white;
+  margin:0;
+  border-radius:10px 10px 0 0;
+}
+.tab-button.active{
+  background:#C8102E;
+}
+.tab-panel[hidden]{
+  display:none !important;
+}
+.standdown-log{
+  max-width:11in;
+  margin:16px auto;
+  background:white;
+  box-shadow:0 5px 25px rgba(0,0,0,.15);
+  padding:22px;
+  box-sizing:border-box;
+}
+.log-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0;
+}
+.log-actions button{
+  margin-top:0;
+}
+.log-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:12px;
+  margin:16px 0;
+}
+.log-card{
+  border:1px solid #d7dce2;
+  border-radius:10px;
+  padding:12px;
+  background:#f8f9fb;
+}
+.log-card strong{
+  color:#0C2D5C;
+  display:block;
+  margin-bottom:6px;
+}
+.log-table-wrap{
+  overflow-x:auto;
+}
+.log-table th{
+  background:#d9d9d9;
+  color:#000;
+  font-size:13px;
+}
+.log-table td{
+  font-size:13px;
+}
+.log-table tbody tr:nth-child(even){
+  background:#dbeaf7;
+}
+.log-note{
+  color:#475569;
+  font-size:13px;
+}
+.is-exporting .app-tabs,
+.is-exporting .standdown-log{
+  display:none !important;
+}
+  
 @media (max-width:760px){
   body{
     background:#f5f7fa;
@@ -517,6 +595,8 @@ textarea[rows="4"]{ min-height:64px; }
     box-shadow:none;
   }
 
+  .app-tabs,
+  .standdown-log,
   button,
   input[type="file"]{
     display:none !important;
@@ -527,6 +607,11 @@ textarea[rows="4"]{ min-height:64px; }
 </head>
 
 <body>
+ <div class="app-tabs" role="tablist" aria-label="Stand-down workspace">
+  <button class="tab-button active" id="formTab" type="button" role="tab" aria-controls="formPanel" aria-selected="true">Complete Stand-Down</button>
+  <button class="tab-button" id="logTab" type="button" role="tab" aria-controls="logPanel" aria-selected="false">Completed Log</button>
+</div>
+<div id="formPanel" class="tab-panel" role="tabpanel" aria-labelledby="formTab"> 
  <div class="field-helper">
   <strong>Field Mode: fill out on phone or tablet</strong>
   <span>Large tap-friendly fields are shown on job sites. Use the red button after photos are added to save the completed stand-down as a PDF.</span>
@@ -543,28 +628,28 @@ textarea[rows="4"]{ min-height:64px; }
 
   <div class="grid">
     <div>
-      <label>Date</label>
-      <input type="date">
+      <label for="standdownDate">Date</label>
+      <input type="date" id="standdownDate">
     </div>
     <div>
-      <label>BFS Representative</label>
-      <input type="text">
+      <label for="bfsRepresentative">BFS Representative</label>
+      <input type="text" id="bfsRepresentative">
     </div>
     <div>
-      <label>Customer / Builder</label>
-      <input type="text">
+      <label for="builderName">Customer / Builder</label>
+      <input type="text" id="builderName">
     </div>
     <div>
-      <label>Project / Community</label>
-      <input type="text">
+      <label for="neighborhoodName">Project / Community</label>
+      <input type="text" id="neighborhoodName">
     </div>
     <div>
-      <label>Building</label>
-      <input type="text">
+      <label for="jobName">Building</label>
+      <input type="text" id="jobName">
     </div>
     <div>
-      <label>Lot #</label>
-      <input type="text">
+    <label for="jobName">Building</label>
+      <input type="text" id="jobName">
     </div>
     <div>
       <label>Project Type</label>
@@ -582,18 +667,19 @@ textarea[rows="4"]{ min-height:64px; }
     </div>
   </div>
 
-  <label>Project Subcontractor</label>
-  <input type="text">
+  <label for="framerName">Project Subcontractor</label>
+  <input type="text" id="framerName">
 
-  <label>Onsite Supervisor (Subcontractor)</label>
-  <input type="text">
+  <label for="projectManager">Onsite Supervisor / Project Manager</label>
+  <input type="text" id="projectManager">
 
   <div class="photo-section">
     <div class="section-title">Job Site Photo Documentation</div>
     <label>Upload Photos</label>
     <input type="file" id="photoUpload" accept="image/*" multiple>
     <div id="photoPreview"></div>
-    <button id="savePdfBtn">Save Safety Stand-Down as PDF</button>
+    <button id="completeStandDownBtn" type="button">Mark Complete & Add to Log</button>
+    <button id="savePdfBtn" type="button">Save Safety Stand-Down as PDF</button>
   </div>
 
 </div>
@@ -931,9 +1017,140 @@ ON SITE: Gave framer QR code to watch Safety Video. Had framer sign Subcontracto
 
 </div>
 
+</div>
+<div id="logPanel" class="tab-panel standdown-log" role="tabpanel" aria-labelledby="logTab" hidden>
+  <div class="section-title">Completed Stand-Down Log</div>
+  <p class="log-note">This internal list is stored in this browser and is not included in the saved PDF.</p>
+  <div class="log-actions">
+    <button id="exportLogBtn" type="button">Export Log CSV</button>
+    <button id="clearLogBtn" type="button">Clear Log</button>
+  </div>
+  <div id="logSummary" class="log-summary-grid"></div>
+  <div class="log-table-wrap">
+    <table class="log-table" aria-label="Completed stand-down tracking log">
+      <thead>
+        <tr><th>Job</th><th>Lot</th><th>Date</th><th>Builder</th><th>PM</th><th>Framer</th><th>Neighborhood</th><th>Month</th><th>Quarter</th><th>Year</th></tr>
+      </thead>
+      <tbody id="standDownLogBody"></tbody>
+    </table>
+  </div>
+</div>
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+
+/* TABS AND INTERNAL COMPLETED LOG */
+const logStorageKey = "bfsStandDownCompletedLog";
+const formTab = document.getElementById("formTab");
+const logTab = document.getElementById("logTab");
+const formPanel = document.getElementById("formPanel");
+const logPanel = document.getElementById("logPanel");
+
+function setActiveTab(tabName){
+  const showingLog = tabName === "log";
+  formPanel.hidden = showingLog;
+  logPanel.hidden = !showingLog;
+  formTab.classList.toggle("active", !showingLog);
+  logTab.classList.toggle("active", showingLog);
+  formTab.setAttribute("aria-selected", String(!showingLog));
+  logTab.setAttribute("aria-selected", String(showingLog));
+  if(showingLog) renderStandDownLog();
+}
+
+formTab.addEventListener("click", ()=>setActiveTab("form"));
+logTab.addEventListener("click", ()=>setActiveTab("log"));
+
+function getLogEntries(){
+  return JSON.parse(localStorage.getItem(logStorageKey) || "[]");
+}
+
+function saveLogEntries(entries){
+  localStorage.setItem(logStorageKey, JSON.stringify(entries));
+}
+
+function getQuarter(date){
+  return "Q" + (Math.floor(date.getMonth() / 3) + 1);
+}
+
+function getStandDownFormEntry(){
+  const dateValue = document.getElementById("standdownDate").value || new Date().toISOString().slice(0,10);
+  const date = new Date(dateValue + "T00:00:00");
+  return {
+    job: document.getElementById("jobName").value.trim(),
+    lot: document.getElementById("lotNumber").value.trim(),
+    date: dateValue,
+    builder: document.getElementById("builderName").value.trim(),
+    pm: document.getElementById("projectManager").value.trim(),
+    framer: document.getElementById("framerName").value.trim(),
+    neighborhood: document.getElementById("neighborhoodName").value.trim(),
+    month: date.toLocaleString("default", { month:"long" }),
+    quarter: getQuarter(date),
+    year: String(date.getFullYear())
+  };
+}
+
+function escapeHtml(value){
+  return String(value || "").replace(/[&<>"']/g, char=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[char]));
+}
+
+function countBy(entries, key){
+  return entries.reduce((acc, entry)=>{
+    const value = entry[key] || "Not listed";
+    acc[value] = (acc[value] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function renderSummaryCard(title, counts){
+  const lines = Object.entries(counts).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
+  return `<div class="log-card"><strong>${title}</strong>${lines.length ? lines.map(([name,total])=>`<div>${escapeHtml(name)}: ${total}</div>`).join("") : "<div>No entries yet</div>"}</div>`;
+}
+
+function renderStandDownLog(){
+  const entries = getLogEntries();
+  document.getElementById("standDownLogBody").innerHTML = entries.map(entry=>`
+    <tr><td>${escapeHtml(entry.job)}</td><td>${escapeHtml(entry.lot)}</td><td>${escapeHtml(entry.date)}</td><td>${escapeHtml(entry.builder)}</td><td>${escapeHtml(entry.pm)}</td><td>${escapeHtml(entry.framer)}</td><td>${escapeHtml(entry.neighborhood)}</td><td>${escapeHtml(entry.month)}</td><td>${escapeHtml(entry.quarter)}</td><td>${escapeHtml(entry.year)}</td></tr>`).join("");
+  document.getElementById("logSummary").innerHTML = [
+    renderSummaryCard("By Job", countBy(entries, "job")),
+    renderSummaryCard("By Framer", countBy(entries, "framer")),
+    renderSummaryCard("By Project Manager", countBy(entries, "pm")),
+    renderSummaryCard("By Neighborhood", countBy(entries, "neighborhood")),
+    renderSummaryCard("By Builder", countBy(entries, "builder")),
+    renderSummaryCard("By Month", countBy(entries, "month")),
+    renderSummaryCard("By Quarter", countBy(entries, "quarter")),
+    renderSummaryCard("By Year", countBy(entries, "year"))
+  ].join("");
+}
+
+document.getElementById("completeStandDownBtn").addEventListener("click", function(){
+  const entries = getLogEntries();
+  entries.push(getStandDownFormEntry());
+  saveLogEntries(entries);
+  renderStandDownLog();
+  setActiveTab("log");
+});
+
+document.getElementById("exportLogBtn").addEventListener("click", function(){
+  const headers = ["Job","Lot","Date","Builder","PM","Framer","Neighborhood","Month","Quarter","Year"];
+  const rows = getLogEntries().map(entry=>[entry.job,entry.lot,entry.date,entry.builder,entry.pm,entry.framer,entry.neighborhood,entry.month,entry.quarter,entry.year]);
+  const csv = [headers, ...rows].map(row=>row.map(value=>`"${String(value || "").replaceAll('"','""')}"`).join(",")).join("\n");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([csv], { type:"text/csv" }));
+  link.download = "stand-down-log.csv";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+document.getElementById("clearLogBtn").addEventListener("click", function(){
+  if(confirm("Clear the completed stand-down log from this browser?")){
+    saveLogEntries([]);
+    renderStandDownLog();
+  }
+});
+
+renderStandDownLog();
+
 
 /* ===== SIGNATURE ENGINE ===== */
 
