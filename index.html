@@ -1069,6 +1069,13 @@ function saveLogEntries(entries){
   localStorage.setItem(logStorageKey, JSON.stringify(entries));
 }
 
+function addCurrentStandDownToLog(){
+  const entries = getLogEntries();
+  entries.push(getStandDownFormEntry());
+  saveLogEntries(entries);
+  renderStandDownLog();
+}
+
 function getQuarter(date){
   return "Q" + (Math.floor(date.getMonth() / 3) + 1);
 }
@@ -1124,10 +1131,7 @@ function renderStandDownLog(){
 }
 
 document.getElementById("completeStandDownBtn").addEventListener("click", function(){
-  const entries = getLogEntries();
-  entries.push(getStandDownFormEntry());
-  saveLogEntries(entries);
-  renderStandDownLog();
+ addCurrentStandDownToLog();
   setActiveTab("log");
 });
 
@@ -1253,6 +1257,7 @@ if(savePdfBtn){
 savePdfBtn.addEventListener("click", async function(){
 
  if(!window.jspdf || !window.html2canvas){
+addCurrentStandDownToLog();
     window.print();
     return;
   }
@@ -1293,6 +1298,7 @@ savePdfBtn.addEventListener("click", async function(){
     }
   
 pdf.save("BFS_Safety_Stand_Down.pdf");
+  addCurrentStandDownToLog();
   } finally {
     document.body.classList.remove("is-exporting");
     savePdfBtn.disabled = false;
