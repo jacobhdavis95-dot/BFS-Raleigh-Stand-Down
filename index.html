@@ -195,6 +195,13 @@ button{
   margin-top:10px;
 }
 
+ .save-status{
+  min-height:20px;
+  margin:8px 0 0;
+  color:#0C2D5C;
+  font-size:13px;
+  font-weight:600;
+} 
 
 .page ul{
   margin:6px 0 10px 20px;
@@ -679,7 +686,8 @@ textarea[rows="4"]{ min-height:64px; }
     <input type="file" id="photoUpload" accept="image/*" multiple>
     <div id="photoPreview"></div>
     <button id="completeStandDownBtn" type="button">Mark Complete & Add to Log</button>
-    <button id="savePdfBtn" type="button">Save Safety Stand-Down as PDF</button>
+    <button id="savePdfBtn" type="button">Save PDF &amp; Add to Completed Log</button>
+    <p id="saveStatus" class="save-status" role="status" aria-live="polite"></p>
   </div>
 
 </div>
@@ -1069,9 +1077,9 @@ function saveLogEntries(entries){
   localStorage.setItem(logStorageKey, JSON.stringify(entries));
 }
 
-function addCurrentStandDownToLog(){
+function addCurrentStandDownToLog(entry = getStandDownFormEntry()){
   const entries = getLogEntries();
-  entries.push(getStandDownFormEntry());
+   entries.push(entry);
   saveLogEntries(entries);
   renderStandDownLog();
 }
@@ -1296,13 +1304,17 @@ addCurrentStandDownToLog();
         pageNumber++;
       }
     }
-  
-pdf.save("BFS_Safety_Stand_Down.pdf");
-  addCurrentStandDownToLog();
+
+    pdf.save("BFS_Safety_Stand_Down.pdf");
+    addCurrentStandDownToLog(completedEntry);
+    saveStatus.textContent = "PDF saved and stand-down added to the Completed Log.";
+  } catch(error) {
+    console.error("Unable to save the stand-down PDF", error);
+    saveStatus.textContent = "The PDF could not be saved, so the Completed Log was not changed.";
   } finally {
     document.body.classList.remove("is-exporting");
     savePdfBtn.disabled = false;
-    savePdfBtn.textContent = "Save Safety Stand-Down as PDF";
+    savePdfBtn.textContent = "Save PDF & Add to Completed Log";
   }
 });
 }
