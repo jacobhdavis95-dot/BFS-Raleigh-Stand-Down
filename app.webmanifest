@@ -1,0 +1,24 @@
+{
+  "name": "Builders FirstSource Install Stand-Down",
+  "short_name": "BFS Stand-Down",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#092557",
+  "theme_color": "#092557",
+  "icons": [
+    {
+      "src": "./bfs-install-standdown-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./bfs-install-standdown-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
