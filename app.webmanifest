@@ -9,13 +9,13 @@
   "theme_color": "#092557",
   "icons": [
     {
-      "src": "./bfs-install-standdown-192.png",
+      "src": "./bfs-standdown-v3-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./bfs-install-standdown-512.png",
+      "src": "./bfs-standdown-v3-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
